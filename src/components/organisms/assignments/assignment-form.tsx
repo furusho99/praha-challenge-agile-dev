@@ -18,6 +18,12 @@ const GENRES = [
   { name: "テスト" },
   { name: "設計" },
   { name: "データベース" },
+  { name: "フロントエンド" },
+  { name: "WEBの基礎" },
+  { name: "チーム開発" },
+  { name: "クラウドインフラ" },
+  { name: "サービス運用" },
+  { name: "高速MVP開発" },
 ]
 
 const formSchema = z.object({
