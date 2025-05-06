@@ -1,0 +1,22 @@
+name: 'Setup Node.js'
+description: 'Setup Node.js using the version specified in package.json'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Use Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version-file: package.json
+    - name: Dependency restore
+      id: cache-restore
+      uses: actions/cache@v4
+      with:
+        path: node_modules
+        key: js-depend-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+    - name: Install Dependencies
+      if: steps.cache-restore.outputs.cache-hit != 'true'
+      run: npm ci
+      shell: bash
