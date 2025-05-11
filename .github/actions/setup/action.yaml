@@ -4,13 +4,11 @@ description: 'Setup Node.js using the version specified in package.json'
 runs:
   using: 'composite'
   steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
     - name: Use Node.js
       uses: actions/setup-node@v4
       with:
         node-version-file: package.json
-    - name: Dependency restore
+    - name: Restore Dependencies
       id: cache-restore
       uses: actions/cache@v4
       with:
