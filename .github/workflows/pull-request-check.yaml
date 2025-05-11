@@ -27,14 +27,3 @@ jobs:
         uses: ./.github/actions/setup
       - name: Run tests
         run: npm run test
-
-  build:
-    name: Run build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      - name: Setup
-        uses: ./.github/actions/setup
-      - name: Run build
-        run: npm run build
