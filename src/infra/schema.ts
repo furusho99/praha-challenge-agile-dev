@@ -45,13 +45,10 @@ export const usersAssignmentsTable = pgTable("users_assignments", {
   isPublic: boolean("is_public").notNull(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
-}, (table) => {
-  return {
-    // 複合主キー
-    pk: primaryKey({ columns: [table.usersId, table.assignmentsId] }),
-    pkWithCustomName: primaryKey({ name: 'user', columns: [table.usersId, table.assignmentsId] }),
-  };
-});
+}, (table) => [
+  // 複合主キー
+  primaryKey({ columns: [table.usersId, table.assignmentsId] }),
+]);
 
 // 新規課題公開リクエストステータステーブル
 export const newAssignmentStatusTable = pgTable("new_assignment_status", {
@@ -62,16 +59,14 @@ export const newAssignmentStatusTable = pgTable("new_assignment_status", {
 export const newAssignmentPublicRequestsTable = pgTable("new_assignment_public_requests", {
   id: serial("id").primaryKey(),
   userId: integer("user_id").references(() => usersTable.id),
-  status: varchar('status', { length: 50 }), // .references(() => newAssignmentStatusTable.status)
+  status: varchar('status', { length: 50 }),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
-}, (table) => {
-  return {
-    // 外部キー名が長すぎてエラーになるため、明示的に指定
-    statusForeignKey: foreignKey({
-      columns: [table.status],
-      foreignColumns: [newAssignmentStatusTable.status],
-      name: 'assignment_public_requests_status_fkey',
-    }),
-  };
-});
+}, (table) => [
+  // 外部キー名が長すぎるとエラーになるため、明示的に指定
+  foreignKey({
+    columns: [table.status],
+    foreignColumns: [newAssignmentStatusTable.status],
+    name: 'assignment_public_requests_status_fkey',
+  }),
+]);
