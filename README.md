@@ -13,19 +13,26 @@ npm run dev
 schema.ts にテーブル定義を追加・変更した後、その変更をデータベースに反映するためのSQLファイルを生成したい場合に使用する。
 
 ```shell
-npx drizzle-kit generate
+npm run migration:generate
 ```
 
 ### push
 開発中にスキーマ変更をすぐにテストしたい場合や、小規模なプロジェクトでマイグレーション履歴を厳密に管理しない場合に使用する。
 
 ```shell
-npx drizzle-kit push
+npm run migration:push
 ```
 
 ### migrate
 generate コマンドで生成したマイグレーションファイルをデータベースに適用し、スキーマを更新したい場合に使用する。
 
 ```shell
-npx drizzle-kit migrate
+npm run migration:apply
+```
+
+### drop
+データベースを初期化したい場合に使用する。
+
+```shell
+npm run migration:drop
 ```

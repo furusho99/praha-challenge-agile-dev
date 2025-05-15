@@ -1,5 +1,5 @@
 {
-  "id": "3f5a4df1-62f8-48ac-b3de-e129a047831e",
+  "id": "9afbe022-70e7-4606-8cd4-11f70bd5552d",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -286,13 +286,6 @@
       "compositePrimaryKeys": {
         "users_assignments_users_id_assignments_id_pk": {
           "name": "users_assignments_users_id_assignments_id_pk",
-          "columns": [
-            "users_id",
-            "assignments_id"
-          ]
-        },
-        "user": {
-          "name": "user",
           "columns": [
             "users_id",
             "assignments_id"
