@@ -1,15 +1,14 @@
 "use client"
 
-import { useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import * as z from "zod"
 import { Button } from "@/components/atoms/button"
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/atoms/form"
 import { Input } from "@/components/atoms/input"
 import { Textarea } from "@/components/atoms/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/atoms/select"
 import { toast } from "sonner"
+import { createAssignmentSchema, type CreateAssignmentSchema } from "@/validations/assignmentSchemas"
 
 // ジャンルのサンプルデータ（実際の実装ではAPIから取得する）
 const GENRES = [
@@ -24,34 +23,11 @@ const GENRES = [
   { name: "サービス運用" },
   { name: "高速MVP開発" },
 ]
-
-const formSchema = z.object({
-  title: z
-    .string()
-    .min(1, {
-      message: "タイトルは必須項目です",
-    })
-    .max(100, {
-      message: "タイトルは100文字以内で入力してください",
-    }),
-  genre: z.string().min(1, {
-    message: "ジャンルを選択してください",
-  }),
-  description: z
-    .string()
-    .min(1, {
-      message: "説明は必須項目です",
-    })
-    .max(1000, {
-      message: "説明は1000文字以内で入力してください",
-    }),
-})
-
+  
 export default function AssignmentForm() {
-  const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<CreateAssignmentSchema>({
+    resolver: zodResolver(createAssignmentSchema),
     defaultValues: {
       title: "",
       genre: "",
@@ -59,28 +35,36 @@ export default function AssignmentForm() {
     },
   })
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    setIsSubmitting(true)
-
-    try {
-      // ここでAPIを呼び出して課題を登録する
-      // 例: await createAssignment(values)
-      console.log(values)
-
-      // 成功メッセージを表示
-      toast("課題が登録されました")
-
-      // フォームをリセット
-      form.reset()
-
-      // 一覧ページに遷移（実際の実装に合わせて変更）
-      // router.push("/admin/assignments")
-    } catch (error) {
-      console.error("課題登録エラー:", error)
-      toast("エラーが発生しました")
-    } finally {
-      setIsSubmitting(false)
+  // 課題作成のAPI呼び出し関数
+  async function createAssignment(data: CreateAssignmentSchema) {
+    const response = await fetch('/api/assignments', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    
+    if (!response.ok) {
+      throw new Error('課題の登録に失敗しました');
     }
+    
+    return await response.json();
+  }
+
+  async function onSubmit(values: CreateAssignmentSchema) {
+    await createAssignment(values)
+    .then(() => {
+      // 成功メッセージを表示
+      toast.success("課題が正常に登録されました");
+      
+      // フォームをリセット
+      form.reset();
+      // TODO ページ遷移処理
+    })
+    .catch((error) => {
+      // エラーメッセージを表示
+      console.error("課題登録エラー:", error);
+      toast.error("エラーが発生しました");
+    });
   }
 
   return (
@@ -144,11 +128,11 @@ export default function AssignmentForm() {
           />
 
           <div className="flex justify-end gap-4">
-            <Button type="button" variant="outline" onClick={() => form.reset()} disabled={isSubmitting}>
+            <Button type="button" variant="outline" onClick={() => form.reset()} disabled={form.formState.isSubmitting}>
               リセット
             </Button>
-            <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? "登録中..." : "課題を登録"}
+            <Button type="submit" disabled={form.formState.isSubmitting}>
+              {form.formState.isSubmitting ? "登録中..." : "課題を登録"}
             </Button>
           </div>
         </form>
