@@ -4,12 +4,11 @@ import { useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
-
-import { Button } from "@/components/atoms/Button"
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/atoms/Form"
-import { Input } from "@/components/atoms/Input"
-import { Textarea } from "@/components/atoms/Textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/atoms/Select"
+import { Button } from "@/components/atoms/button"
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/atoms/form"
+import { Input } from "@/components/atoms/input"
+import { Textarea } from "@/components/atoms/textarea"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/atoms/select"
 import { toast } from "sonner"
 
 // ジャンルのサンプルデータ（実際の実装ではAPIから取得する）
