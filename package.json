@@ -19,7 +19,14 @@
     "next": "15.3.0",
     "postgres": "^3.4.5",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "@hookform/resolvers": "^5.0.1",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.503.0",
+    "react-hook-form": "^7.56.1",
+    "tailwind-merge": "^3.2.0",
+    "zod": "^3.24.3"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -27,15 +34,10 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "drizzle-kit": "^0.31.1",
     "eslint": "^9",
     "eslint-config-next": "15.3.0",
     "tailwindcss": "^4",
-    "tsx": "^4.19.4",
-    "typescript": "^5",
-    "vitest": "^3.1.3"
-  },
-  "engines": {
-    "node": "v22.15.0"
+    "tw-animate-css": "^1.2.8",
+    "typescript": "^5"
   }
 }
