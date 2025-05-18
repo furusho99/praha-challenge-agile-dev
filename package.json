@@ -14,8 +14,11 @@
     "migration:drop": "drizzle-kit drop"
   },
   "dependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.32.1",
+    "@typescript-eslint/parser": "^8.32.1",
     "dotenv": "^16.5.0",
     "drizzle-orm": "^0.43.1",
+    "eslint-plugin-drizzle": "^0.2.3",
     "next": "15.3.0",
     "postgres": "^3.4.5",
     "react": "^19.0.0",
