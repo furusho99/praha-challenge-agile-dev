@@ -1,7 +1,7 @@
 /**
  * 課題リポジトリの実装
  */
-import { Assignment, CreateAssignmentData } from "@/domain/assignments/assignmentTypes";
+import { Assignment } from "@/domain/assignments/assignmentTypes";
 import { AssignmentRepository } from "@/domain/assignments/assignmentRepository";
 
 /**
@@ -10,23 +10,13 @@ import { AssignmentRepository } from "@/domain/assignments/assignmentRepository"
 export class AssignmentRepositoryImpl implements AssignmentRepository {
   private assignments: Assignment[] = [];
 
-  async create(data: CreateAssignmentData): Promise<Assignment> {
-    // UUIDを生成
-    const id = crypto.randomUUID();
-    
-    const newAssignment = Assignment.create(
-      id,
-      data.title,
-      data.genre,
-      data.description
-    );
-    
-    this.assignments.push(newAssignment);
-    
+  async save(data: Assignment): Promise<Assignment> {
+    this.assignments.push(data);
+
     // 実際の実装ではデータベースに保存
     // 例: await db.assignment.create({ data })
-    
-    return newAssignment;
+
+    return data;
   }
 }
 

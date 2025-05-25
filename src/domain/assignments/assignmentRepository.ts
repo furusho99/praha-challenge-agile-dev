@@ -2,11 +2,11 @@
  * 課題リポジトリインターフェース
  * データアクセスの抽象化レイヤー
  */
-import { Assignment, CreateAssignmentData } from "./assignmentTypes";
+import { Assignment } from "./assignmentTypes";
 
 export interface AssignmentRepository {
   /**
-   * 新しい課題を作成する
+   * 課題を永続化するメソッド
    */
-  create(data: CreateAssignmentData): Promise<Assignment>;
+  save(data: Assignment): Promise<Assignment>;
 }

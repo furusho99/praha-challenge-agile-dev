@@ -51,18 +51,6 @@ export default function AssignmentForm() {
       // エラーメッセージを表示
       console.error("課題登録エラー:", result.errors);
       toast.error(result.message || "エラーが発生しました");
-      
-      // フィールドエラーがある場合はフォームにセットする
-      if (result.errors) {
-        Object.entries(result.errors).forEach(([key, value]) => {
-          if (key in form.formState.errors) {
-            form.setError(key as any, { 
-              type: "server", 
-              message: Array.isArray(value) ? value[0] : value as string 
-            });
-          }
-        });
-      }
     }
   }
 

@@ -9,5 +9,5 @@ export async function createAssignmentUsecase(
   assignmentRepository: AssignmentRepository
 ): Promise<Assignment> {
   // リポジトリに永続化の依頼を行う
-  return await assignmentRepository.create(data);
+  return await assignmentRepository.save(data.toAssignment());
 }

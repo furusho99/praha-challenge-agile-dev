@@ -4,6 +4,18 @@
 import * as z from "zod";
 
 /**
+ * 課題エンティティ用のスキーマ
+ */
+export const assignmentSchema = z.object({
+  id: z.string().uuid({ message: "有効なUUID形式ではありません" }),
+  title: z.string().min(1).max(100),
+  genre: z.string().min(1),
+  description: z.string().min(1).max(1000),
+});
+
+export type AssignmentType = z.infer<typeof assignmentSchema>;
+
+/**
  * 課題作成用のバリデーションスキーマ
  */
 export const createAssignmentSchema = z.object({
