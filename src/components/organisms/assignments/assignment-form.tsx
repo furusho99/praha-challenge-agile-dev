@@ -106,7 +106,7 @@ export default function AssignmentForm() {
                     ))}
                   </SelectContent>
                 </Select>
-                <FormDescription>課題のカテゴリを選択してください</FormDescription>
+                <FormDescription>課題のジャンルを選択してください</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
