@@ -11,16 +11,15 @@ export class AssignmentRepositoryImpl implements AssignmentRepository {
   private assignments: Assignment[] = [];
 
   async create(data: CreateAssignmentData): Promise<Assignment> {
-    // 仮のID生成（本来はデータベースが生成）
-    const id = Math.floor(Math.random() * 1000);
-    const now = new Date().toISOString();
+    // UUIDを生成
+    const id = crypto.randomUUID();
     
-    const newAssignment: Assignment = {
-      ...data,
+    const newAssignment = Assignment.create(
       id,
-      created_at: now,
-      updated_at: now,
-    };
+      data.title,
+      data.genre,
+      data.description
+    );
     
     this.assignments.push(newAssignment);
     

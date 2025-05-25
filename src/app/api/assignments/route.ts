@@ -6,11 +6,11 @@ import { CreateAssignmentData } from "@/domain/assignments/assignmentTypes";
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const assignmentData: CreateAssignmentData = {
-      title: body.title,
-      genre: body.genre,
-      description: body.description,
-    };
+    const assignmentData = CreateAssignmentData.create(
+      body.title,
+      body.genre,
+      body.description
+    );
 
     // リポジトリを取得
     const repository = getAssignmentRepository();
