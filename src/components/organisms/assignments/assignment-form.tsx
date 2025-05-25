@@ -9,6 +9,7 @@ import { Textarea } from "@/components/atoms/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/atoms/select"
 import { toast } from "sonner"
 import { createAssignmentSchema, type CreateAssignmentSchema } from "@/validations/assignmentSchemas"
+import { createAssignment } from "@/actions/assignments"
 
 // ジャンルのサンプルデータ（実際の実装ではAPIから取得する）
 const GENRES = [
@@ -35,36 +36,34 @@ export default function AssignmentForm() {
     },
   })
 
-  // 課題作成のAPI呼び出し関数
-  async function createAssignment(data: CreateAssignmentSchema) {
-    const response = await fetch('/api/assignments', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
-    });
-    
-    if (!response.ok) {
-      throw new Error('課題の登録に失敗しました');
-    }
-    
-    return await response.json();
-  }
-
   async function onSubmit(values: CreateAssignmentSchema) {
-    await createAssignment(values)
-    .then(() => {
+    // サーバーアクションを呼び出す
+    const result = await createAssignment(values);
+    
+    if (result.success) {
       // 成功メッセージを表示
-      toast.success("課題が正常に登録されました");
+      toast.success(result.message);
       
       // フォームをリセット
       form.reset();
       // TODO ページ遷移処理
-    })
-    .catch((error) => {
+    } else {
       // エラーメッセージを表示
-      console.error("課題登録エラー:", error);
-      toast.error("エラーが発生しました");
-    });
+      console.error("課題登録エラー:", result.errors);
+      toast.error(result.message || "エラーが発生しました");
+      
+      // フィールドエラーがある場合はフォームにセットする
+      if (result.errors) {
+        Object.entries(result.errors).forEach(([key, value]) => {
+          if (key in form.formState.errors) {
+            form.setError(key as any, { 
+              type: "server", 
+              message: Array.isArray(value) ? value[0] : value as string 
+            });
+          }
+        });
+      }
+    }
   }
 
   return (
