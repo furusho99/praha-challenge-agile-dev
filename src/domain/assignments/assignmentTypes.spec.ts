@@ -224,7 +224,6 @@ describe('CreateAssignmentData', () => {
   describe('toAssignment', () => {
     it('作成データから課題エンティティに変換できる', () => {
       // Arrange
-      const id = "123e4567-e89b-12d3-a456-426614174000";
       const title = "テスト課題";
       const genre = "テスト";
       const description = "これはテスト用の課題です";
@@ -241,7 +240,7 @@ describe('CreateAssignmentData', () => {
       // Assert
       expect(assignment).toBeInstanceOf(Assignment);
       expect(assignment.toJSON()).toEqual({
-        id,
+        id: expect.any(String), // IDは自動生成されるため、任意の文字列であることを確認
         title,
         genre,
         description
