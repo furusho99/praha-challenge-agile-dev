@@ -1,15 +1,24 @@
 'use client'
 
+import { signIn } from "@/actions/sign-in";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { signInWithSupabase } from "@/infra/supabase/sign-in";
-import { signInUsecase } from "@/usecases/sign-in/SignInUsecase";
 import { useActionState } from "react";
 
+const initialState = {
+	error: "",
+	prevState: {
+		email: "",
+	},
+} as const;
+
 export default function SignInForm() {
-	const action = signInUsecase.bind(null, signInWithSupabase)
-	const [state, formAction] = useActionState(action, null);
+	const [state, formAction, isPending] = useActionState(
+		async (_prevState: { error?: string; prevState?: { email: string } }, formData: FormData) => {
+			return await signIn(formData);
+		},initialState
+	);
 
 	return (
 		<form className="flex flex-col items-center" action={formAction}>
@@ -25,14 +34,12 @@ export default function SignInForm() {
 				</Label>
 				<Input id="password" type="password" name="password" />
 			</div>
-			{
-				state?.error && (
-					<p className="pb-5 text-red-500">
-						{state.error}
-					</p>
-				)
-			}
-			<Button className="w-24" type="submit">
+			{state?.error && state.error !== "" && (
+				<p className="pb-5 text-red-500">
+					{state.error}
+				</p>
+			)}
+			<Button className="w-24" type="submit" disabled={isPending}>
 				サインイン
 			</Button>
 		</form>
