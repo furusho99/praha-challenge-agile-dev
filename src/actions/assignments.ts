@@ -33,7 +33,7 @@ export async function createAssignment(data: CreateAssignmentSchema) {
     const repository = getAssignmentRepository();
     
     // ユースケースを実行
-    const assignment = await createAssignmentUsecase(createData, repository);
+    await createAssignmentUsecase(createData, repository);
     
     // キャッシュを更新
     revalidatePath('/admin/assignments');
@@ -41,7 +41,6 @@ export async function createAssignment(data: CreateAssignmentSchema) {
     return {
       success: true,
       message: "課題が正常に登録されました",
-      assignment: assignment.toJSON()
     };
   } catch (error) {
     console.error("課題登録エラー:", error);

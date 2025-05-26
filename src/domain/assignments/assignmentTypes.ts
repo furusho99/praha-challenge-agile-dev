@@ -17,38 +17,39 @@ export class Assignment {
     this.#description = props.description;
   }
 
+  public get id(): string {
+    return this.#id;
+  }
+
+  public get title(): string {
+    return this.#title;
+  }
+
+  public get genre(): string {
+    return this.#genre;
+  }
+
+  public get description(): string {
+    return this.#description;
+  }
+
   /**
    * バリデーションを含むファクトリメソッド
    */
   static create(
-    id: string,
     title: string,
     genre: string,
     description: string,
   ): Assignment {
+    // UUIDを生成
+    const id = crypto.randomUUID();
     const result = assignmentSchema.safeParse({ id, title, genre, description });
-    
+
     if (!result.success) {
       throw new Error(`バリデーションエラー: ${result.error.message}`);
     }
     
     return new Assignment(result.data);
-  }
-  
-  // エンティティの等価性はIDで判断
-  equals(other: Assignment): boolean {
-    if (this.#id === undefined || other.#id === undefined) return false;
-    return this.#id === other.#id;
-  }
-
-  // エンティティのシリアライズ（JSONに変換する際に便利）
-  toJSON(): AssignmentType {
-    return {
-      id: this.#id,
-      title: this.#title,
-      genre: this.#genre,
-      description: this.#description,
-    };
   }
 }
 
@@ -60,6 +61,16 @@ export class CreateAssignmentData {
   
   private constructor(props: z.infer<typeof createAssignmentSchema>) {
     this.#props = props;
+  }
+
+  public get title(): string {
+    return this.#props.title;
+  }
+  public get genre(): string {
+    return this.#props.genre;
+  }
+  public get description(): string {
+    return this.#props.description;
   }
   
   /**
@@ -77,18 +88,5 @@ export class CreateAssignmentData {
     }
     
     return new CreateAssignmentData(result.data);
-  }
-  
-  
-  // 課題エンティティに変換
-  toAssignment(): Assignment {
-    // UUIDを生成
-    const id = crypto.randomUUID();  
-    return Assignment.create(
-      id,
-      this.#props.title,
-      this.#props.genre,
-      this.#props.description,
-    );
   }
 }
