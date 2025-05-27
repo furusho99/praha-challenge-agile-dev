@@ -1,9 +1,9 @@
 'use client'
 
 import { signIn } from "@/actions/sign-in";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Button } from "@/components/atoms/button";
+import { Input } from "@/components/atoms/input";
+import { Label } from "@/components/atoms/label";
 import { useActionState } from "react";
 
 const initialState = {
