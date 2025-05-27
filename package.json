@@ -11,7 +11,8 @@
     "migration:generate": "drizzle-kit generate",
     "migration:push": "drizzle-kit push",
     "migration:apply": "drizzle-kit migrate",
-    "migration:drop": "drizzle-kit drop"
+    "migration:drop": "drizzle-kit drop",
+    "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
     "@radix-ui/react-label": "^2.1.7",
