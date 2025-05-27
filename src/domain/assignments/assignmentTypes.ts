@@ -1,5 +1,9 @@
 import * as z from "zod";
-import { assignmentSchema, AssignmentType, createAssignmentSchema } from "@/validations/assignmentSchemas";
+import {
+  assignmentSchema,
+  AssignmentType,
+  createAssignmentSchema,
+} from "@/validations/assignmentSchemas";
 
 /**
  * 課題エンティティ
@@ -36,19 +40,20 @@ export class Assignment {
   /**
    * バリデーションを含むファクトリメソッド
    */
-  static create(
-    title: string,
-    genre: string,
-    description: string,
-  ): Assignment {
+  static create(title: string, genre: string, description: string): Assignment {
     // UUIDを生成
     const id = crypto.randomUUID();
-    const result = assignmentSchema.safeParse({ id, title, genre, description });
+    const result = assignmentSchema.safeParse({
+      id,
+      title,
+      genre,
+      description,
+    });
 
     if (!result.success) {
       throw new Error(`バリデーションエラー: ${result.error.message}`);
     }
-    
+
     return new Assignment(result.data);
   }
 }
@@ -58,7 +63,7 @@ export class Assignment {
  */
 export class CreateAssignmentData {
   readonly #props: z.infer<typeof createAssignmentSchema>;
-  
+
   private constructor(props: z.infer<typeof createAssignmentSchema>) {
     this.#props = props;
   }
@@ -72,7 +77,7 @@ export class CreateAssignmentData {
   public get description(): string {
     return this.#props.description;
   }
-  
+
   /**
    * バリデーションを含むファクトリメソッド
    */
@@ -81,12 +86,16 @@ export class CreateAssignmentData {
     genre: string,
     description: string,
   ): CreateAssignmentData {
-    const result = createAssignmentSchema.safeParse({ title, genre, description });
-    
+    const result = createAssignmentSchema.safeParse({
+      title,
+      genre,
+      description,
+    });
+
     if (!result.success) {
       throw new Error(`バリデーションエラー: ${result.error.message}`);
     }
-    
+
     return new CreateAssignmentData(result.data);
   }
 }

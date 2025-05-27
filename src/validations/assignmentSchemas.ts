@@ -40,7 +40,6 @@ export const createAssignmentSchema = z.object({
     }),
 });
 
-
 /**
  * バリデーションスキーマの型定義
  */
