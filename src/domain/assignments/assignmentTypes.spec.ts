@@ -25,7 +25,6 @@ describe('Assignment', () => {
     
     it('空のタイトルでエラーを投げる', () => {
       // Arrange
-      const id = "123e4567-e89b-12d3-a456-426614174000";
       const title = "";
       const genre = "テスト";
       const description = "これはテスト用の課題です";
