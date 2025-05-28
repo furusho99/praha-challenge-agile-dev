@@ -17,7 +17,7 @@ export const usersStatusTable = pgTable("users_status", {
 
 // ユーザーテーブル
 export const usersTable = pgTable("users", {
-  id: serial("id").primaryKey(),
+  id: varchar("id", { length: 36 }).primaryKey(),
   firstName: varchar("first_name", { length: 255 }).notNull(),
   lastName: varchar("last_name", { length: 255 }).notNull(),
   season: integer("season").notNull(),
@@ -53,7 +53,7 @@ export const assignmentStatusTable = pgTable("assignment_status", {
 export const usersAssignmentsTable = pgTable(
   "users_assignments",
   {
-    usersId: integer("users_id")
+    usersId: varchar("users_id", { length: 36 })
       .notNull()
       .references(() => usersTable.id),
     assignmentsId: integer("assignments_id")
@@ -82,7 +82,7 @@ export const newAssignmentPublicRequestsTable = pgTable(
   "new_assignment_public_requests",
   {
     id: serial("id").primaryKey(),
-    userId: integer("user_id").references(() => usersTable.id),
+    userId: varchar("user_id", { length: 36 }).references(() => usersTable.id),
     status: varchar("status", { length: 50 }),
     createdAt: timestamp("created_at").notNull().defaultNow(),
     updatedAt: timestamp("updated_at").notNull().defaultNow(),
