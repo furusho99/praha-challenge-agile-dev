@@ -8,6 +8,20 @@
       "when": 1747295427574,
       "tag": "0000_majestic_lilith",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1748401224487,
+      "tag": "0001_jittery_chat",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1748401280769,
+      "tag": "0002_stiff_sprite",
+      "breakpoints": true
     }
   ]
 }
