@@ -4,6 +4,7 @@ import { signIn } from "@/actions/sign-in";
 import { Button } from "@/components/atoms/button";
 import { Input } from "@/components/atoms/input";
 import { Label } from "@/components/atoms/label";
+import { useRouter } from "next/navigation";
 import { useActionState } from "react";
 
 const initialState = {
@@ -14,12 +15,21 @@ const initialState = {
 } as const;
 
 export default function SignInForm() {
+  const router = useRouter();
+
   const [state, formAction, isPending] = useActionState(
     async (
       _prevState: { error?: string; prevState?: { email: string } },
       formData: FormData,
     ) => {
-      return await signIn(formData);
+      const result = await signIn(formData);
+      if (result.error) {
+        return result;
+      } else {
+        router.push("/");
+        router.refresh();
+        return {};
+      }
     },
     initialState,
   );
