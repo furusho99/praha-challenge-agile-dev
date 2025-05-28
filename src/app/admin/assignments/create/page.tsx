@@ -8,5 +8,5 @@ export default function Page() {
         <AssignmentForm />
       </div>
     </div>
-  )
+  );
 }

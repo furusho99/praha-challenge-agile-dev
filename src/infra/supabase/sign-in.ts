@@ -1,9 +1,10 @@
-'use server'
+"use server";
 
 import { createClient } from "@/infra/supabase/server";
 
 export async function signInWithSupabase(
-    email: string, password: string
+  email: string,
+  password: string,
 ): Promise<{ error: Error | null }> {
   const supabase = await createClient();
 
