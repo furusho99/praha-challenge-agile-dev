@@ -1,46 +1,15 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { Button } from "@/components/atoms/button";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/atoms/form";
-import { Input } from "@/components/atoms/input";
-import { Textarea } from "@/components/atoms/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/atoms/select";
-import { toast } from "sonner";
-import {
-  createAssignmentSchema,
-  type CreateAssignmentSchema,
-} from "@/validations/assignmentSchemas";
-import { createAssignment } from "@/actions/assignments";
-
-// ジャンルのサンプルデータ（実際の実装ではAPIから取得する）
-const GENRES = [
-  { name: "データベース設計" },
-  { name: "テスト" },
-  { name: "設計" },
-  { name: "データベース" },
-  { name: "フロントエンド" },
-  { name: "WEBの基礎" },
-  { name: "チーム開発" },
-  { name: "クラウドインフラ" },
-  { name: "サービス運用" },
-  { name: "高速MVP開発" },
-];
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import { Button } from "@/components/atoms/button"
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/atoms/form"
+import { Input } from "@/components/atoms/input"
+import { Textarea } from "@/components/atoms/textarea"
+import { toast } from "sonner"
+import { createAssignmentSchema, type CreateAssignmentSchema } from "@/validations/assignmentSchemas"
+import { createAssignment } from "@/actions/assignments"
+import { GenreSelect } from "@/components/organisms/genre/genre-select"
 
 export default function AssignmentForm() {
   const form = useForm<CreateAssignmentSchema>({
@@ -97,23 +66,14 @@ export default function AssignmentForm() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>ジャンル</FormLabel>
-                <Select onValueChange={field.onChange} value={field.value}>
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="ジャンルを選択" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {GENRES.map((genre) => (
-                      <SelectItem key={genre.name} value={genre.name}>
-                        {genre.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FormDescription>
-                  課題のジャンルを選択してください
-                </FormDescription>
+                <FormControl>
+                  <GenreSelect 
+                    value={field.value}
+                    onValueChange={field.onChange}
+                    placeholder="ジャンルを選択"
+                  />
+                </FormControl>
+                <FormDescription>課題のジャンルを選択してください</FormDescription>
                 <FormMessage />
               </FormItem>
             )}

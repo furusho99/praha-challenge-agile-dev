@@ -3,20 +3,32 @@
  */
 import { Assignment } from "@/domain/assignments/assignmentTypes";
 import { AssignmentRepository } from "@/domain/assignments/assignmentRepository";
+import { db } from "@/infra/db";
+import { assignmentsTable } from "@/infra/schema";
 
 /**
  * 課題リポジトリの実装クラス
  */
 export class AssignmentRepositoryImpl implements AssignmentRepository {
-  private assignments: Assignment[] = [];
-
   async save(data: Assignment): Promise<Assignment> {
-    this.assignments.push(data);
+    const insertedAssignment = await db
+      .insert(assignmentsTable)
+      .values({
+        id: data.id,
+        title: data.title,
+        genre: data.genre,
+        description: data.description,
+      })
+      .returning();
 
-    // 実際の実装ではデータベースに保存
-    // 例: await db.assignment.create({ data })
-
-    return data;
+    const savedData = insertedAssignment[0];
+    
+    return Assignment.reconstruct({
+      id: savedData.id.toString(),
+      title: savedData.title,
+      genre: savedData.genre,
+      description: savedData.description,
+    });
   }
 }
 
