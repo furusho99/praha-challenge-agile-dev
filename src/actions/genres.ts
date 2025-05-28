@@ -11,13 +11,12 @@ import { getGenresUsecase } from "@/usecases/genre/getGenresUsecase";
  */
 export async function getGenres() {
   try {
-
     const repository = getGenreRepository();
     const genres = await getGenresUsecase(repository);
 
     // ジャンル名のみを返すように変換
-    const genreNames = genres.map(genre => ({ name: genre.name }));
-    
+    const genreNames = genres.map((genre) => ({ name: genre.name }));
+
     return {
       success: true,
       data: genreNames,

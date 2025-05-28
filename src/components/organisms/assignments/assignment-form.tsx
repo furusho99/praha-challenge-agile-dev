@@ -1,15 +1,26 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { Button } from "@/components/atoms/button"
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/atoms/form"
-import { Input } from "@/components/atoms/input"
-import { Textarea } from "@/components/atoms/textarea"
-import { toast } from "sonner"
-import { createAssignmentSchema, type CreateAssignmentSchema } from "@/validations/assignmentSchemas"
-import { createAssignment } from "@/actions/assignments"
-import { GenreSelect } from "@/components/organisms/genre/genre-select"
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { Button } from "@/components/atoms/button";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/atoms/form";
+import { Input } from "@/components/atoms/input";
+import { Textarea } from "@/components/atoms/textarea";
+import { toast } from "sonner";
+import {
+  createAssignmentSchema,
+  type CreateAssignmentSchema,
+} from "@/validations/assignmentSchemas";
+import { createAssignment } from "@/actions/assignments";
+import { GenreSelect } from "@/components/organisms/genre/genre-select";
 
 export default function AssignmentForm() {
   const form = useForm<CreateAssignmentSchema>({
@@ -67,13 +78,15 @@ export default function AssignmentForm() {
               <FormItem>
                 <FormLabel>ジャンル</FormLabel>
                 <FormControl>
-                  <GenreSelect 
+                  <GenreSelect
                     value={field.value}
                     onValueChange={field.onChange}
                     placeholder="ジャンルを選択"
                   />
                 </FormControl>
-                <FormDescription>課題のジャンルを選択してください</FormDescription>
+                <FormDescription>
+                  課題のジャンルを選択してください
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}

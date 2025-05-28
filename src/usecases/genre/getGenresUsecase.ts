@@ -4,9 +4,8 @@
 import { Genre } from "@/domain/genre/genreTypes";
 import { GenreRepository } from "@/domain/genre/genreRepository";
 
-
 export async function getGenresUsecase(
-    genreRepository: GenreRepository
+  genreRepository: GenreRepository,
 ): Promise<Genre[]> {
-    return await genreRepository.findAll();
+  return await genreRepository.findAll();
 }

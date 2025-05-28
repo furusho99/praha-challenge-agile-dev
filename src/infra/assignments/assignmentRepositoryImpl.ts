@@ -22,7 +22,7 @@ export class AssignmentRepositoryImpl implements AssignmentRepository {
       .returning();
 
     const savedData = insertedAssignment[0];
-    
+
     return Assignment.reconstruct({
       id: savedData.id.toString(),
       title: savedData.title,

@@ -13,7 +13,7 @@ export class Genre {
   public get name(): string {
     return this.#name;
   }
-  
+
   static reconstruct(props: GenreType): Genre {
     const result = genreSchema.safeParse(props);
 

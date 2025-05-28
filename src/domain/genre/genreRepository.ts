@@ -2,7 +2,7 @@
  * ジャンルリポジトリインターフェース
  * データアクセスの抽象化レイヤー
  */
-import { Genre } from './genreTypes';
+import { Genre } from "./genreTypes";
 
 export interface GenreRepository {
   /**

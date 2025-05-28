@@ -1,9 +1,15 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/atoms/select"
-import { toast } from "sonner"
-import { getGenres } from "@/actions/genres"
+import { useEffect, useState } from "react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/atoms/select";
+import { toast } from "sonner";
+import { getGenres } from "@/actions/genres";
 
 // ジャンルの型定義
 type Genre = {
@@ -17,11 +23,11 @@ interface GenreSelectProps {
   disabled?: boolean;
 }
 
-export function GenreSelect({ 
-  value, 
-  onValueChange, 
+export function GenreSelect({
+  value,
+  onValueChange,
   placeholder = "ジャンルを選択",
-  disabled = false 
+  disabled = false,
 }: GenreSelectProps) {
   // ジャンル一覧の状態管理
   const [genres, setGenres] = useState<Genre[]>([]);

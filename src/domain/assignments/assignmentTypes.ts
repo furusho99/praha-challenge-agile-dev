@@ -59,11 +59,11 @@ export class Assignment {
 
   static reconstruct(props: AssignmentType): Assignment {
     const result = assignmentSchema.safeParse(props);
-    
+
     if (!result.success) {
       throw new Error(`バリデーションエラー: ${result.error.message}`);
     }
-    
+
     return new Assignment(result.data);
   }
 }
