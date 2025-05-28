@@ -1,6 +1,6 @@
 {
-  "id": "a44cf209-6e6f-451d-b591-be0bea78c4aa",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "0e47bb98-9254-4f97-ab35-599d124f4800",
+  "prevId": "a44cf209-6e6f-451d-b591-be0bea78c4aa",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -71,11 +71,15 @@
         "assignments_genre_genre_name_fk": {
           "name": "assignments_genre_genre_name_fk",
           "tableFrom": "assignments",
+          "columnsFrom": [
+            "genre"
+          ],
           "tableTo": "genre",
-          "columnsFrom": ["genre"],
-          "columnsTo": ["name"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "columnsTo": [
+            "name"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -145,20 +149,28 @@
         "new_assignment_public_requests_user_id_users_id_fk": {
           "name": "new_assignment_public_requests_user_id_users_id_fk",
           "tableFrom": "new_assignment_public_requests",
+          "columnsFrom": [
+            "user_id"
+          ],
           "tableTo": "users",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "assignment_public_requests_status_fkey": {
           "name": "assignment_public_requests_status_fkey",
           "tableFrom": "new_assignment_public_requests",
+          "columnsFrom": [
+            "status"
+          ],
           "tableTo": "new_assignment_status",
-          "columnsFrom": ["status"],
-          "columnsTo": ["status"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "columnsTo": [
+            "status"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -234,35 +246,50 @@
         "users_assignments_users_id_users_id_fk": {
           "name": "users_assignments_users_id_users_id_fk",
           "tableFrom": "users_assignments",
+          "columnsFrom": [
+            "users_id"
+          ],
           "tableTo": "users",
-          "columnsFrom": ["users_id"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "users_assignments_assignments_id_assignments_id_fk": {
           "name": "users_assignments_assignments_id_assignments_id_fk",
           "tableFrom": "users_assignments",
+          "columnsFrom": [
+            "assignments_id"
+          ],
           "tableTo": "assignments",
-          "columnsFrom": ["assignments_id"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "users_assignments_status_assignment_status_status_fk": {
           "name": "users_assignments_status_assignment_status_status_fk",
           "tableFrom": "users_assignments",
+          "columnsFrom": [
+            "status"
+          ],
           "tableTo": "assignment_status",
-          "columnsFrom": ["status"],
-          "columnsTo": ["status"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "columnsTo": [
+            "status"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
         }
       },
       "compositePrimaryKeys": {
         "users_assignments_users_id_assignments_id_pk": {
           "name": "users_assignments_users_id_assignments_id_pk",
-          "columns": ["users_id", "assignments_id"]
+          "columns": [
+            "users_id",
+            "assignments_id"
+          ]
         }
       },
       "uniqueConstraints": {},
@@ -349,11 +376,15 @@
         "users_status_users_status_status_fk": {
           "name": "users_status_users_status_status_fk",
           "tableFrom": "users",
+          "columnsFrom": [
+            "status"
+          ],
           "tableTo": "users_status",
-          "columnsFrom": ["status"],
-          "columnsTo": ["status"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "columnsTo": [
+            "status"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -365,10 +396,10 @@
   },
   "enums": {},
   "schemas": {},
+  "views": {},
   "sequences": {},
   "roles": {},
   "policies": {},
-  "views": {},
   "_meta": {
     "columns": {},
     "schemas": {},

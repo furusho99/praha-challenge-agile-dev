@@ -3,9 +3,9 @@ CREATE TABLE "assignment_status" (
 );
 --> statement-breakpoint
 CREATE TABLE "assignments" (
-	"id" serial PRIMARY KEY NOT NULL,
+	"id" uuid PRIMARY KEY NOT NULL,
 	"title" varchar(255) NOT NULL,
-	"genre" varchar(100),
+	"genre" varchar(100) NOT NULL,
 	"description" text NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL
@@ -16,8 +16,8 @@ CREATE TABLE "genre" (
 );
 --> statement-breakpoint
 CREATE TABLE "new_assignment_public_requests" (
-	"id" serial PRIMARY KEY NOT NULL,
-	"user_id" integer,
+	"id" uuid PRIMARY KEY NOT NULL,
+	"user_id" uuid,
 	"status" varchar(50),
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL
@@ -28,8 +28,8 @@ CREATE TABLE "new_assignment_status" (
 );
 --> statement-breakpoint
 CREATE TABLE "users_assignments" (
-	"users_id" integer NOT NULL,
-	"assignments_id" integer NOT NULL,
+	"users_id" uuid NOT NULL,
+	"assignments_id" uuid NOT NULL,
 	"status" varchar(50),
 	"is_public" boolean NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
@@ -42,7 +42,7 @@ CREATE TABLE "users_status" (
 );
 --> statement-breakpoint
 CREATE TABLE "users" (
-	"id" serial PRIMARY KEY NOT NULL,
+	"id" uuid PRIMARY KEY NOT NULL,
 	"first_name" varchar(255) NOT NULL,
 	"last_name" varchar(255) NOT NULL,
 	"season" integer NOT NULL,
