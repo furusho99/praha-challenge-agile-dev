@@ -56,6 +56,16 @@ export class Assignment {
 
     return new Assignment(result.data);
   }
+
+  static reconstruct(props: AssignmentType): Assignment {
+    const result = assignmentSchema.safeParse(props);
+
+    if (!result.success) {
+      throw new Error(`バリデーションエラー: ${result.error.message}`);
+    }
+
+    return new Assignment(result.data);
+  }
 }
 
 /**

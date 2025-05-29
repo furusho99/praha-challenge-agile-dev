@@ -2,12 +2,12 @@ import {
   boolean,
   integer,
   pgTable,
-  serial,
   text,
   timestamp,
   varchar,
   primaryKey,
   foreignKey,
+  uuid,
 } from "drizzle-orm/pg-core";
 
 // ユーザーステータスのテーブル
@@ -17,7 +17,7 @@ export const usersStatusTable = pgTable("users_status", {
 
 // ユーザーテーブル
 export const usersTable = pgTable("users", {
-  id: serial("id").primaryKey(),
+  id: uuid("id").primaryKey(),
   firstName: varchar("first_name", { length: 255 }).notNull(),
   lastName: varchar("last_name", { length: 255 }).notNull(),
   season: integer("season").notNull(),
@@ -36,9 +36,11 @@ export const genreTable = pgTable("genre", {
 
 // 課題テーブル
 export const assignmentsTable = pgTable("assignments", {
-  id: serial("id").primaryKey(),
+  id: uuid("id").primaryKey(),
   title: varchar("title", { length: 255 }).notNull(),
-  genre: varchar("genre", { length: 100 }).references(() => genreTable.name),
+  genre: varchar("genre", { length: 100 })
+    .notNull()
+    .references(() => genreTable.name),
   description: text("description").notNull(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
@@ -53,10 +55,10 @@ export const assignmentStatusTable = pgTable("assignment_status", {
 export const usersAssignmentsTable = pgTable(
   "users_assignments",
   {
-    usersId: integer("users_id")
+    usersId: uuid("users_id")
       .notNull()
       .references(() => usersTable.id),
-    assignmentsId: integer("assignments_id")
+    assignmentsId: uuid("assignments_id")
       .notNull()
       .references(() => assignmentsTable.id),
     status: varchar("status", { length: 50 }).references(
@@ -81,8 +83,8 @@ export const newAssignmentStatusTable = pgTable("new_assignment_status", {
 export const newAssignmentPublicRequestsTable = pgTable(
   "new_assignment_public_requests",
   {
-    id: serial("id").primaryKey(),
-    userId: integer("user_id").references(() => usersTable.id),
+    id: uuid("id").primaryKey(),
+    userId: uuid("user_id").references(() => usersTable.id),
     status: varchar("status", { length: 50 }),
     createdAt: timestamp("created_at").notNull().defaultNow(),
     updatedAt: timestamp("updated_at").notNull().defaultNow(),
