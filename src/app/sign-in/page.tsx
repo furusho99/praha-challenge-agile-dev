@@ -1,4 +1,4 @@
-import SignInForm from "@/components/organisms/sign-in/sign-in-form";
+import { SignInForm } from "@/components/organisms/sign-in/sign-in-form";
 import { Card } from "@/components/atoms/card";
 
 export default function SignIn() {

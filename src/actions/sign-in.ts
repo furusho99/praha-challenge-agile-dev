@@ -21,15 +21,13 @@ export async function signIn(formData: FormData): Promise<{
     const { email, password } = parsedFormData;
     const result = await signInUsecase(email, password, signInWithSupabase);
 
-    if (result.success) {
-      redirect("/");
-    } else {
-      const prevState = { email: email };
-      return {
-        error: result.error,
-        prevState,
-      };
-    }
+    const prevState = { email: email };
+    return result.success
+      ? {}
+      : {
+          error: result.error,
+          prevState,
+        };
   } catch (error) {
     const email =
       typeof formData.get("email") === "string" ? formData.get("email") : "";
