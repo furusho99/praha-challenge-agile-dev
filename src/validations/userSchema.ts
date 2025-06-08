@@ -12,8 +12,8 @@ export const userSchema = z.object({
     .int()
     .min(1, { message: "シーズンは1以上の整数でなければなりません" })
     .max(100, { message: "シーズンは100以下の整数でなければなりません" }),
-  status: z.enum(["ACTIVE", "INACTIVE"], {
-    message: "ステータスはACTIVEまたはINACTIVEでなければなりません",
+  status: z.enum(["ACTIVE", "INACTIVE", "PENDING", "GRADUATED", "DELTED"], {
+    message: "有効なステータスを選択してください",
   }),
 });
 export type SignUpSchema = z.infer<typeof userSchema>;

@@ -1,12 +1,14 @@
 import { userSchema } from "@/validations/userSchema";
 
+type UserStatus = "ACTIVE" | "INACTIVE" | "PENDING" | "GRADUATED" | "DELETED";
+
 export class User {
   readonly #id: string;
   readonly #email: string;
   readonly #firstName: string;
   readonly #lastName: string;
   readonly #season: number;
-  readonly #status: "ACTIVE" | "INACTIVE";
+  readonly #status: UserStatus;
 
   private constructor(props: {
     id: string;
@@ -14,7 +16,7 @@ export class User {
     firstName: string;
     lastName: string;
     season: number;
-    status: "ACTIVE" | "INACTIVE";
+    status: UserStatus;
   }) {
     const parsedUser = userSchema.parse(props);
 
@@ -31,7 +33,7 @@ export class User {
     email: string;
     firstName: string;
     lastName: string;
-    status: "ACTIVE" | "INACTIVE";
+    status: "ACTIVE";
     season?: number;
   }): User {
     return new User({
@@ -60,7 +62,7 @@ export class User {
     return this.#season;
   }
 
-  get status(): "ACTIVE" | "INACTIVE" {
+  get status(): UserStatus {
     return this.#status;
   }
 }
