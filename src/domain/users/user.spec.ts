@@ -15,7 +15,6 @@ describe("User", () => {
     firstName: "John",
     lastName: "Doe",
     status: "ACTIVE" as const,
-    season: 1,
   };
 
   it("should create a User instance with valid properties", () => {
@@ -26,7 +25,6 @@ describe("User", () => {
     expect(user.firstName).toBe(validProps.firstName);
     expect(user.lastName).toBe(validProps.lastName);
     expect(user.status).toBe(validProps.status);
-    expect(user.season).toBe(1);
   });
 
   it("should throw if userSchema.parse throws", () => {
@@ -36,7 +34,6 @@ describe("User", () => {
       firstName: "Jane",
       lastName: "Doe",
       status: "ACTIVE" as const,
-      season: 1,
     };
 
     (userSchema.parse as ReturnType<typeof vi.fn>).mockImplementationOnce(
