@@ -7,7 +7,6 @@ export class User {
   readonly #email: string;
   readonly #firstName: string;
   readonly #lastName: string;
-  readonly #season: number;
   readonly #status: UserStatus;
 
   private constructor(props: {
@@ -15,7 +14,6 @@ export class User {
     email: string;
     firstName: string;
     lastName: string;
-    season: number;
     status: UserStatus;
   }) {
     const parsedUser = userSchema.parse(props);
@@ -24,7 +22,6 @@ export class User {
     this.#email = parsedUser.email;
     this.#firstName = parsedUser.firstName;
     this.#lastName = parsedUser.lastName;
-    this.#season = parsedUser.season;
     this.#status = props.status;
   }
 
@@ -34,7 +31,6 @@ export class User {
     firstName: string;
     lastName: string;
     status: "ACTIVE";
-    season?: number;
   }): User {
     return new User({
       id: props.id,
@@ -42,7 +38,6 @@ export class User {
       firstName: props.firstName,
       lastName: props.lastName,
       status: props.status,
-      season: 1, //seasonの生成は本来はルールがあるはずだが、一旦簡略的に実装。
     });
   }
 
@@ -57,9 +52,6 @@ export class User {
   }
   get lastName(): string {
     return this.#lastName;
-  }
-  get season(): number {
-    return this.#season;
   }
 
   get status(): UserStatus {

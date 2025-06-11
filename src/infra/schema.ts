@@ -1,6 +1,5 @@
 import {
   boolean,
-  integer,
   pgTable,
   text,
   timestamp,
@@ -39,9 +38,7 @@ export const usersTable = pgTable("users", {
   id: uuid("id").primaryKey(),
   firstName: varchar("first_name", { length: 255 }).notNull(),
   lastName: varchar("last_name", { length: 255 }).notNull(),
-  teamId: uuid("team_id")
-    .notNull()
-    .references(() => teamsTable.id),
+  teamId: uuid("team_id").references(() => teamsTable.id),
   isAdministrator: boolean("is_administrator").notNull(),
   status: varchar("status", { length: 50 }).references(
     () => usersStatusTable.status,
