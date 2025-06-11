@@ -23,6 +23,7 @@ export class UserRepositoryImpl implements UserRepository {
           firstName: user.firstName,
           lastName: user.lastName,
           status: user.status,
+          teamId: null,
           isAdministrator: false,
         },
       });
