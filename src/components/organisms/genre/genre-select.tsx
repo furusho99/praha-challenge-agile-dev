@@ -1,6 +1,3 @@
-"use client";
-
-import { useEffect, useState } from "react";
 import {
   Select,
   SelectContent,
@@ -8,7 +5,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/atoms/select";
-import { toast } from "sonner";
 import { getGenres } from "@/actions/genres";
 
 // ジャンルの型定義
@@ -23,47 +19,19 @@ interface GenreSelectProps {
   disabled?: boolean;
 }
 
-export function GenreSelect({
+export async function GenreSelect({
   value,
-  onValueChange,
-  placeholder = "ジャンルを選択",
-  disabled = false,
+  onValueChange
 }: GenreSelectProps) {
-  // ジャンル一覧の状態管理
-  const [genres, setGenres] = useState<Genre[]>([]);
-  const [isLoadingGenres, setIsLoadingGenres] = useState(true);
-
-  // コンポーネントマウント時にジャンル一覧を取得
-  useEffect(() => {
-    async function fetchGenres() {
-      try {
-        const result = await getGenres();
-        if (result.success) {
-          setGenres(result.data);
-        } else {
-          toast.error(result.message);
-        }
-      } catch (error) {
-        console.error("ジャンル取得エラー:", error);
-        toast.error("ジャンルの取得に失敗しました");
-      } finally {
-        setIsLoadingGenres(false);
-      }
-    }
-
-    fetchGenres();
-  }, []);
-
-  const isDisabled = disabled || isLoadingGenres;
-  const displayPlaceholder = isLoadingGenres ? "読み込み中..." : placeholder;
+  const genres = await getGenres();
 
   return (
-    <Select onValueChange={onValueChange} value={value} disabled={isDisabled}>
+    <Select onValueChange={onValueChange} value={value}>
       <SelectTrigger>
-        <SelectValue placeholder={displayPlaceholder} />
+        <SelectValue placeholder={"ジャンルを選択"} />
       </SelectTrigger>
       <SelectContent>
-        {genres.map((genre: Genre) => (
+        {genres.data.map((genre: Genre) => (
           <SelectItem key={genre.name} value={genre.name}>
             {genre.name}
           </SelectItem>
