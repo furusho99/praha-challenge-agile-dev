@@ -1,6 +1,5 @@
 import {
   boolean,
-  integer,
   pgTable,
   text,
   timestamp,
@@ -15,12 +14,31 @@ export const usersStatusTable = pgTable("users_status", {
   status: varchar("status", { length: 50 }).primaryKey(),
 });
 
+// シーズンテーブル
+export const seasonsTable = pgTable("seasons", {
+  id: uuid("id").primaryKey(),
+  name: varchar("name", { length: 100 }).notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+// チームテーブル
+export const teamsTable = pgTable("teams", {
+  id: uuid("id").primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  seasonId: uuid("season_id")
+    .notNull()
+    .references(() => seasonsTable.id),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
 // ユーザーテーブル
 export const usersTable = pgTable("users", {
   id: uuid("id").primaryKey(),
   firstName: varchar("first_name", { length: 255 }).notNull(),
   lastName: varchar("last_name", { length: 255 }).notNull(),
-  season: integer("season").notNull(),
+  teamId: uuid("team_id").references(() => teamsTable.id),
   isAdministrator: boolean("is_administrator").notNull(),
   status: varchar("status", { length: 50 }).references(
     () => usersStatusTable.status,

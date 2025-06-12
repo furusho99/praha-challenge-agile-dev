@@ -13,8 +13,8 @@ export class UserRepositoryImpl implements UserRepository {
         id: user.id,
         firstName: user.firstName,
         lastName: user.lastName,
-        season: user.season,
         status: user.status,
+        teamId: null,
         isAdministrator: false,
       })
       .onConflictDoUpdate({
@@ -22,8 +22,8 @@ export class UserRepositoryImpl implements UserRepository {
         set: {
           firstName: user.firstName,
           lastName: user.lastName,
-          season: user.season,
           status: user.status,
+          teamId: null,
           isAdministrator: false,
         },
       });
