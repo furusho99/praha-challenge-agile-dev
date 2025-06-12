@@ -7,11 +7,6 @@ export const userSchema = z.object({
   email: emailSchema,
   firstName: userNameSchema("名"),
   lastName: userNameSchema("姓"),
-  season: z
-    .number()
-    .int()
-    .min(1, { message: "シーズンは1以上の整数でなければなりません" })
-    .max(100, { message: "シーズンは100以下の整数でなければなりません" }),
   status: z.enum(["ACTIVE", "INACTIVE", "PENDING", "GRADUATED", "DELTED"], {
     message: "有効なステータスを選択してください",
   }),
