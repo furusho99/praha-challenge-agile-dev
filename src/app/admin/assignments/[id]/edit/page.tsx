@@ -1,4 +1,4 @@
-import { fetchAssignmentOfLatestVersionById } from "@/actions/fetch-assignment-by-id";
+import { fetchAssignmentOfLatestVersionById } from "@/actions/fetch-assignment-of-latest-version-by-id";
 import AssignmentEditForm from "@/components/organisms/assignments/assignment-edit-form";
 
 export default async function Page(props: { params: Promise<{ id: string }> }) {
