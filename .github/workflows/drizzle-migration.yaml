@@ -1,19 +1,19 @@
 name: Run Drizzle Migrations
 
-on: 
-  push: 
+on:
+  push:
     branches:
       - main
     paths:
-      - 'drizzle/**/*.sql' # SQLファイルに変更があった場合のみ実行
-  
+      - "drizzle/**/*.sql" # SQLファイルに変更があった場合のみ実行
+
 jobs:
   drizzle-migrations:
     runs-on: ubuntu-latest
     timeout-minutes: 10 # 10分でタイムアウト, デフォルトは6時間
 
     # 複数のマイグレーションが実行され競合状態にならないように管理
-    concurrency: 
+    concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
       cancel-in-progress: false # 実行中のジョブをキャンセルさせない
 
@@ -24,6 +24,6 @@ jobs:
         uses: ./.github/actions/setup
       - name: Run migrations
         run: npm run migration:apply
-        env: 
+        env:
           DATABASE_URL: ${{secrets.DATABASE_URL}}
         continue-on-error: false # マイグレーションが失敗した場合、ワークフローを終了させる
