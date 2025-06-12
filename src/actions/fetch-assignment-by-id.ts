@@ -1,8 +1,8 @@
 "use server";
 
-import { fetchAssignmentById as _fetcher } from "@/infra/assignments/fetchAssignmentById";
+import { fetchAssignmentOfLatestVersionById as _fetcher } from "@/infra/assignments/fetchAssignmentOfLatestVersionById";
 
-export async function fetchAssignmentById(
+export async function fetchAssignmentOfLatestVersionById(
   id: string,
   fetcher = _fetcher,
 ): Promise<{

@@ -1,8 +1,8 @@
 import { db } from "@/infra/db";
 import { assignmentsTable } from "@/infra/schema";
-import { eq } from "drizzle-orm";
+import { eq, desc } from "drizzle-orm";
 
-export async function fetchAssignmentById(id: string): Promise<{
+export async function fetchAssignmentOfLatestVersionById(id: string): Promise<{
   id: string;
   title: string;
   genre: string;
@@ -20,6 +20,7 @@ export async function fetchAssignmentById(id: string): Promise<{
       })
       .from(assignmentsTable)
       .where(eq(assignmentsTable.id, id))
+      .orderBy(desc(assignmentsTable.version))
       .limit(1)
       .execute();
 

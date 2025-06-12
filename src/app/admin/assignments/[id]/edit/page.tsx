@@ -1,9 +1,9 @@
-import { fetchAssignmentById } from "@/actions/fetch-assignment-by-id";
+import { fetchAssignmentOfLatestVersionById } from "@/actions/fetch-assignment-by-id";
 import AssignmentEditForm from "@/components/organisms/assignments/assignment-edit-form";
 
 export default async function Page(props: { params: Promise<{ id: string }> }) {
   const { id } = await props.params;
-  const assignment = await fetchAssignmentById(id);
+  const assignment = await fetchAssignmentOfLatestVersionById(id);
 
   return (
     <div className="container min-h-screen flex flex-col items-center justify-center py-10 mx-auto">
