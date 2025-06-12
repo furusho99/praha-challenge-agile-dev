@@ -16,37 +16,46 @@ import { Input } from "@/components/atoms/input";
 import { Textarea } from "@/components/atoms/textarea";
 import { toast } from "sonner";
 import {
-  createAssignmentSchema,
-  type CreateAssignmentSchema,
+  UpdateAssignmentSchema,
+  updateAssignmentSchema,
 } from "@/validations/assignmentSchemas";
-import { createAssignment } from "@/actions/assignments";
 import { GenreSelect } from "@/components/organisms/genre/genre-select";
+import { updateAssignment } from "@/actions/update-assignment";
 
-export default function AssignmentForm() {
-  const form = useForm<CreateAssignmentSchema>({
-    resolver: zodResolver(createAssignmentSchema),
+export default function AssignmentEditForm({
+  assignment,
+}: {
+  assignment: {
+    id: string;
+    title: string;
+    genre: string;
+    description: string;
+    version: number;
+  };
+}) {
+  const { id, title, genre, description, version } = assignment;
+  const form = useForm<UpdateAssignmentSchema>({
+    resolver: zodResolver(updateAssignmentSchema),
     defaultValues: {
-      title: "",
-      genre: "",
-      description: "",
+      id: id,
+      title: title,
+      genre: genre,
+      description: description,
+      version: version,
     },
   });
 
-  async function onSubmit(values: CreateAssignmentSchema) {
-    // サーバーアクションを呼び出す
-    const result = await createAssignment(values);
+  async function onSubmit(formData: UpdateAssignmentSchema) {
+    const result = await updateAssignment({
+      ...formData,
+      id,
+      version,
+    });
 
-    if (result.success) {
-      // 成功メッセージを表示
-      toast.success(result.message);
-
-      // フォームをリセット
-      form.reset();
-      // TODO ページ遷移処理
+    if (!result.error) {
+      toast.success("課題が更新されました");
     } else {
-      // エラーメッセージを表示
-      console.error("課題登録エラー:", result.errors);
-      toast.error(result.message || "エラーが発生しました");
+      toast.error(result.error || "エラーが発生しました");
     }
   }
 

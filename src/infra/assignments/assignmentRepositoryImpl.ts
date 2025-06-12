@@ -18,16 +18,18 @@ export class AssignmentRepositoryImpl implements AssignmentRepository {
         title: data.title,
         genre: data.genre,
         description: data.description,
+        version: data.version,
       })
       .returning();
 
     const savedData = insertedAssignment[0];
 
     return Assignment.reconstruct({
-      id: savedData.id.toString(),
+      id: savedData.id,
       title: savedData.title,
       genre: savedData.genre,
       description: savedData.description,
+      version: savedData.version,
     });
   }
 }
