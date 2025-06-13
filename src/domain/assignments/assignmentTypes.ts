@@ -13,12 +13,14 @@ export class Assignment {
   readonly #title: string;
   readonly #genre: string;
   readonly #description: string;
+  readonly #version: number;
 
   private constructor(props: AssignmentType) {
     this.#id = props.id;
     this.#title = props.title;
     this.#genre = props.genre;
     this.#description = props.description;
+    this.#version = props.version;
   }
 
   public get id(): string {
@@ -37,17 +39,28 @@ export class Assignment {
     return this.#description;
   }
 
+  public get version(): number {
+    return this.#version;
+  }
+
   /**
    * バリデーションを含むファクトリメソッド
    */
-  static create(title: string, genre: string, description: string): Assignment {
-    // UUIDを生成
-    const id = crypto.randomUUID();
+  static create(
+    title: string,
+    genre: string,
+    description: string,
+    _id?: string,
+    version?: number,
+  ): Assignment {
+    // 新規の場合はUUIDを生成
+    const id = _id ?? crypto.randomUUID();
     const result = assignmentSchema.safeParse({
       id,
       title,
       genre,
       description,
+      version: version ?? 1,
     });
 
     if (!result.success) {
@@ -55,6 +68,17 @@ export class Assignment {
     }
 
     return new Assignment(result.data);
+  }
+
+  public incrementVersion(): Assignment {
+    const newVersion = this.#version + 1;
+    return new Assignment({
+      id: this.#id,
+      title: this.#title,
+      genre: this.#genre,
+      description: this.#description,
+      version: newVersion,
+    });
   }
 
   static reconstruct(props: AssignmentType): Assignment {

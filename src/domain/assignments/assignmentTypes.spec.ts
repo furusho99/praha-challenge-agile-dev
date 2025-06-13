@@ -46,6 +46,28 @@ describe("Assignment", () => {
       }).toThrow("バリデーションエラー");
     });
   });
+
+  describe("incrementVersion", () => {
+    it("バージョンが1増加した新しいAssignmentを返す", () => {
+      // Arrange
+      const title = "テスト課題";
+      const genre = "テスト";
+      const description = "これはテスト用の課題です";
+      const assignment = Assignment.create(title, genre, description);
+      const currentVersion = assignment.version;
+
+      // Act
+      const incremented = assignment.incrementVersion();
+
+      // Assert
+      expect(incremented).toBeInstanceOf(Assignment);
+      expect(incremented.version).toBe(currentVersion + 1);
+      expect(incremented.id).toBe(assignment.id);
+      expect(incremented.title).toBe(assignment.title);
+      expect(incremented.genre).toBe(assignment.genre);
+      expect(incremented.description).toBe(assignment.description);
+    });
+  });
 });
 
 describe("CreateAssignmentData", () => {

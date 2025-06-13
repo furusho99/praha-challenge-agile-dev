@@ -7,6 +7,7 @@ import {
   primaryKey,
   foreignKey,
   uuid,
+  integer,
 } from "drizzle-orm/pg-core";
 
 // ユーザーステータスのテーブル
@@ -53,16 +54,21 @@ export const genreTable = pgTable("genre", {
 });
 
 // 課題テーブル
-export const assignmentsTable = pgTable("assignments", {
-  id: uuid("id").primaryKey(),
-  title: varchar("title", { length: 255 }).notNull(),
-  genre: varchar("genre", { length: 100 })
-    .notNull()
-    .references(() => genreTable.name),
-  description: text("description").notNull(),
-  createdAt: timestamp("created_at").notNull().defaultNow(),
-  updatedAt: timestamp("updated_at").notNull().defaultNow(),
-});
+export const assignmentsTable = pgTable(
+  "assignments",
+  {
+    id: uuid("id").notNull(),
+    version: integer("version").default(1).notNull(),
+    title: varchar("title", { length: 255 }).notNull(),
+    genre: varchar("genre", { length: 100 })
+      .notNull()
+      .references(() => genreTable.name),
+    description: text("description").notNull(),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+    updatedAt: timestamp("updated_at").notNull().defaultNow(),
+  },
+  (table) => [primaryKey({ columns: [table.id, table.version] })],
+);
 
 // 課題ステータステーブル
 export const assignmentStatusTable = pgTable("assignment_status", {
@@ -76,9 +82,7 @@ export const usersAssignmentsTable = pgTable(
     usersId: uuid("users_id")
       .notNull()
       .references(() => usersTable.id),
-    assignmentsId: uuid("assignments_id")
-      .notNull()
-      .references(() => assignmentsTable.id),
+    assignmentsId: uuid("assignments_id").notNull(),
     status: varchar("status", { length: 50 }).references(
       () => assignmentStatusTable.status,
     ),

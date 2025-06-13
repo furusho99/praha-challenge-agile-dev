@@ -11,6 +11,9 @@ export const assignmentSchema = z.object({
   title: z.string().min(1).max(100),
   genre: z.string().min(1),
   description: z.string().min(1).max(1000),
+  version: z.number().int().min(1, {
+    message: "バージョンは1以上の整数である必要があります",
+  }),
 });
 
 export type AssignmentType = z.infer<typeof assignmentSchema>;
@@ -44,3 +47,14 @@ export const createAssignmentSchema = z.object({
  * バリデーションスキーマの型定義
  */
 export type CreateAssignmentSchema = z.infer<typeof createAssignmentSchema>;
+
+/**
+ * 課題更新用のバリデーションスキーマ
+ */
+export const updateAssignmentSchema = createAssignmentSchema.extend({
+  id: z.string().uuid({ message: "有効なUUID形式ではありません" }),
+  version: z.number().int().min(1, {
+    message: "バージョンは1以上の整数である必要があります",
+  }),
+});
+export type UpdateAssignmentSchema = z.infer<typeof updateAssignmentSchema>;
