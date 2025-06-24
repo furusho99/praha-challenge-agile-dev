@@ -3,8 +3,8 @@
  */
 import { db } from "@/infra/db";
 import { seasonsTable } from "@/infra/schema";
-import { SeasonRepository } from "@/domain/season/seasonRepository";
-import { Season } from "@/domain/season/seasonTypes";
+import { SeasonRepository } from "@/domain/seasons/seasonRepository";
+import { Season } from "@/domain/seasons/seasonTypes";
 
 /**
  * シーズンリポジトリの実装クラス

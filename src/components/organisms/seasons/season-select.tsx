@@ -9,7 +9,7 @@ import {
   SelectValue,
 } from "@/components/atoms/select";
 import { toast } from "sonner";
-import { Season } from "@/domain/season/seasonTypes";
+import { Season } from "@/domain/seasons/seasonTypes";
 import { getSeasons } from "@/actions/seasons";
 
 interface SeasonSelectProps {
