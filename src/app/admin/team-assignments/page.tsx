@@ -8,13 +8,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/atoms/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/atoms/select";
 import { Button } from "@/components/atoms/button";
 import { Checkbox } from "@/components/atoms/checkbox";
 import { Badge } from "@/components/atoms/badge";
@@ -27,13 +20,7 @@ import {
 import { Alert, AlertDescription } from "@/components/atoms/alert";
 import { CheckCircle, AlertCircle } from "lucide-react";
 import { SeasonSelect } from "@/components/organisms/seasons/season-select";
-
-const teams = [
-  { id: "1-1", name: "チーム1-1", seasonId: "1" },
-  { id: "1-2", name: "チーム1-2", seasonId: "1" },
-  { id: "2-1", name: "チーム2-1", seasonId: "2" },
-  { id: "2-2", name: "チーム2-2", seasonId: "2" },
-];
+import { TeamSelect } from "@/components/organisms/teams/team-select";
 
 const tasks = [
   {
@@ -473,11 +460,6 @@ export default function TeamAssignmentPage() {
   const [assignments, setAssignments] = useState(initialAssignments);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-  // 選択されたシーズンに基づいてチームをフィルタリング
-  const filteredTeams = selectedSeason
-    ? teams.filter((team) => team.seasonId === selectedSeason)
-    : [];
-
   // チームが選択されたときの課題割り当て状況
   const teamAssignments = selectedTeam ? assignments[selectedTeam] || [] : [];
 
@@ -556,22 +538,13 @@ export default function TeamAssignmentPage() {
                 <label htmlFor="team" className="text-sm font-medium">
                   チーム
                 </label>
-                <Select
+                <TeamSelect
                   value={selectedTeam}
                   onValueChange={setSelectedTeam}
+                  seasonId={selectedSeason}
+                  placeholder="チームを選択"
                   disabled={!selectedSeason}
-                >
-                  <SelectTrigger id="team">
-                    <SelectValue placeholder="チームを選択" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {filteredTeams.map((team) => (
-                      <SelectItem key={team.id} value={team.id}>
-                        {team.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                />
               </div>
             </CardContent>
           </Card>
@@ -584,9 +557,7 @@ export default function TeamAssignmentPage() {
                 課題割り当て
                 {selectedTeam && (
                   <span className="ml-2">
-                    <Badge variant="outline">
-                      {teams.find((t) => t.id === selectedTeam)?.name}
-                    </Badge>
+                    <Badge variant="outline">{selectedTeam}</Badge>
                   </span>
                 )}
               </CardTitle>

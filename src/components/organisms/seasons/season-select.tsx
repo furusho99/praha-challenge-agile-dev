@@ -9,7 +9,6 @@ import {
   SelectValue,
 } from "@/components/atoms/select";
 import { toast } from "sonner";
-import { Season } from "@/domain/seasons/seasonTypes";
 import { getSeasons } from "@/actions/seasons";
 
 interface SeasonSelectProps {
@@ -26,7 +25,7 @@ export function SeasonSelect({
   disabled = false,
 }: SeasonSelectProps) {
   // シーズン一覧の状態管理
-  const [seasons, setSeasons] = useState<Season[]>([]);
+  const [seasons, setSeasons] = useState<{ id: string; name: string }[]>([]);
   const [isLoadingSeasons, setIsLoadingSeasons] = useState(true);
 
   // コンポーネントマウント時にシーズン一覧を取得
@@ -59,7 +58,7 @@ export function SeasonSelect({
         <SelectValue placeholder={displayPlaceholder} />
       </SelectTrigger>
       <SelectContent>
-        {seasons.map((season: Season) => (
+        {seasons.map((season) => (
           <SelectItem key={season.id} value={season.id}>
             {season.name}
           </SelectItem>
