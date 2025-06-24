@@ -20,7 +20,10 @@ export class AssignmentRepositoryImpl implements AssignmentRepository {
     const latestAssignments: Record<string, Assignment> = {};
     for (const assignment of assignments) {
       const key = assignment.id;
-      if (!latestAssignments[key] || latestAssignments[key].version < assignment.version) {
+      if (
+        !latestAssignments[key] ||
+        latestAssignments[key].version < assignment.version
+      ) {
         latestAssignments[key] = Assignment.reconstruct({
           id: assignment.id,
           title: assignment.title,

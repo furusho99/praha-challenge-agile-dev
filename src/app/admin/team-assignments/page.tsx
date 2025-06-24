@@ -22,15 +22,8 @@ import { CheckCircle, AlertCircle } from "lucide-react";
 import { SeasonSelect } from "@/components/organisms/seasons/season-select";
 import { TeamSelect } from "@/components/organisms/teams/team-select";
 import { getAssignments } from "@/actions/assignments";
+import { getTeamsAssignments } from "@/actions/teams-assignments";
 import { toast } from "sonner";
-
-// チームごとの課題割り当て状況（モック）
-const initialAssignments: { [key: string]: string[] } = {
-  "1-1": ["1", "2"],
-  "1-2": ["1", "2", "3"],
-  "2-1": ["1", "2", "3", "4"],
-  "2-2": ["1", "2", "3", "4", "5"],
-};
 
 export default function TeamAssignmentPage() {
   const [selectedSeason, setSelectedSeason] = useState<string>("");
@@ -44,41 +37,25 @@ export default function TeamAssignmentPage() {
       description: string;
     }[]
   >([]);
+  const [teamAssignments, setTeamAssignments] = useState<string[]>([]);
+  const [isLoadingTeamAssignments, setIsLoadingTeamAssignments] =
+    useState<boolean>(false);
 
-  const [isLoadingAssignments, setIsLoadingAssignments] =
-    useState<boolean>(true);
-
-  // チームが選択されたときの課題割り当て状況
-  // const teamAssignments = selectedTeam ? assignments[selectedTeam] || [] : [];
-
-  // // 課題の割り当て状態を切り替える
-  // const toggleTaskAssignment = (taskId: string) => {
-  //   setAssignments((prev) => {
-  //     const newAssignments = { ...prev };
-
-  //     if (!newAssignments[selectedTeam]) {
-  //       newAssignments[selectedTeam] = [];
-  //     }
-
-  //     if (newAssignments[selectedTeam].includes(taskId)) {
-  //       newAssignments[selectedTeam] = newAssignments[selectedTeam].filter(
-  //         (id) => id !== taskId,
-  //       );
-  //     } else {
-  //       newAssignments[selectedTeam] = [
-  //         ...newAssignments[selectedTeam],
-  //         taskId,
-  //       ];
-  //     }
-
-  //     return newAssignments;
-  //   });
-  // };
+  // 課題の割り当て状態を切り替える
+  const toggleTaskAssignment = (taskId: string) => {
+    setTeamAssignments((prev) => {
+      if (prev.includes(taskId)) {
+        return prev.filter((id) => id !== taskId);
+      } else {
+        return [...prev, taskId];
+      }
+    });
+  };
 
   // 変更を保存する
   const saveChanges = () => {
     // ここで実際のAPIリクエストを行う
-    console.log("保存された割り当て:", assignments);
+    console.log("保存された割り当て:", teamAssignments);
     setSuccessMessage("チームへの課題割り当てが保存されました");
 
     // 3秒後にメッセージを消す
@@ -88,7 +65,7 @@ export default function TeamAssignmentPage() {
   };
 
   useEffect(() => {
-    async function fetchTeams() {
+    async function fetchAssignments() {
       try {
         const result = await getAssignments();
         if (result.success) {
@@ -97,14 +74,42 @@ export default function TeamAssignmentPage() {
           toast.error(result.message);
         }
       } catch (error) {
-        console.error("チーム取得エラー:", error);
-        toast.error("チームの取得に失敗しました");
-      } finally {
-        setIsLoadingAssignments(false);
+        console.error("課題取得エラー:", error);
+        toast.error("課題の取得に失敗しました");
       }
     }
-    fetchTeams();
+    fetchAssignments();
   }, []);
+
+  // チームが選択されたときに、そのチームの課題割り当て状況を取得する
+  useEffect(() => {
+    async function fetchTeamAssignments() {
+      if (!selectedTeam) {
+        setTeamAssignments([]);
+        return;
+      }
+
+      setIsLoadingTeamAssignments(true);
+      try {
+        const result = await getTeamsAssignments(selectedTeam);
+        if (result.success) {
+          // チームに割り当てられている課題のIDを取得
+          const assignedTaskIds = result.data.map((item) => item.assignmentsId);
+          setTeamAssignments(assignedTaskIds);
+        } else {
+          toast.error(result.message);
+          setTeamAssignments([]);
+        }
+      } catch (error) {
+        console.error("チーム課題割り当て取得エラー:", error);
+        toast.error("チーム課題割り当ての取得に失敗しました");
+        setTeamAssignments([]);
+      } finally {
+        setIsLoadingTeamAssignments(false);
+      }
+    }
+    fetchTeamAssignments();
+  }, [selectedTeam]);
 
   return (
     <div className="container mx-auto py-8">
@@ -160,14 +165,7 @@ export default function TeamAssignmentPage() {
         <div className="md:col-span-9">
           <Card>
             <CardHeader>
-              <CardTitle>
-                課題割り当て
-                {selectedTeam && (
-                  <span className="ml-2">
-                    <Badge variant="outline">{selectedTeam}</Badge>
-                  </span>
-                )}
-              </CardTitle>
+              <CardTitle>課題割り当て</CardTitle>
               <CardDescription>
                 チームに割り当てる課題を選択してください
               </CardDescription>
@@ -189,117 +187,140 @@ export default function TeamAssignmentPage() {
                       <TabsTrigger value="unassigned">未割り当て</TabsTrigger>
                     </TabsList>
                     <TabsContent value="all" className="mt-4">
-                      <div className="space-y-4">
-                        {assignments.map((assignment) => (
-                          <div
-                            key={assignment.id}
-                            className="flex items-start space-x-3 p-4 border rounded-md hover:bg-muted/50 transition-colors"
-                          >
-                            <Checkbox
-                              id={`task-${assignment.id}`}
-                              // checked={teamAssignments.includes(assignment.id)}
-                              onCheckedChange={
-                                () => {}
-                                // toggleTaskAssignment(assignment.id)
-                              }
-                            />
-                            <div className="flex-1">
-                              <label
-                                htmlFor={`task-${assignment.id}`}
-                                className="text-sm font-medium cursor-pointer flex items-center"
-                              >
-                                {assignment.title}
-                                <Badge
-                                  variant="outline"
-                                  className="ml-2 text-xs"
+                      {isLoadingTeamAssignments ? (
+                        <div className="flex items-center justify-center h-32">
+                          <p className="text-muted-foreground">読み込み中...</p>
+                        </div>
+                      ) : (
+                        <div className="space-y-4">
+                          {assignments.map((assignment) => (
+                            <div
+                              key={assignment.id}
+                              className="flex items-start space-x-3 p-4 border rounded-md hover:bg-muted/50 transition-colors"
+                            >
+                              <Checkbox
+                                id={`task-${assignment.id}`}
+                                checked={teamAssignments.includes(
+                                  assignment.id,
+                                )}
+                                onCheckedChange={() =>
+                                  toggleTaskAssignment(assignment.id)
+                                }
+                              />
+                              <div className="flex-1">
+                                <label
+                                  htmlFor={`task-${assignment.id}`}
+                                  className="text-sm font-medium cursor-pointer flex items-center"
                                 >
-                                  {assignment.genre}
-                                </Badge>
-                              </label>
-                              <p className="text-sm text-muted-foreground mt-1">
-                                {assignment.description}
-                              </p>
+                                  {assignment.title}
+                                  <Badge
+                                    variant="outline"
+                                    className="ml-2 text-xs"
+                                  >
+                                    {assignment.genre}
+                                  </Badge>
+                                </label>
+                                <p className="text-sm text-muted-foreground mt-1">
+                                  {assignment.description}
+                                </p>
+                              </div>
                             </div>
-                          </div>
-                        ))}
-                      </div>
+                          ))}
+                        </div>
+                      )}
                     </TabsContent>
                     <TabsContent value="assigned" className="mt-4">
-                      <div className="space-y-4">
-                        {assignments
-                          // .filter((assignment) => teamAssignments.includes(assignment.id))
-                          .map((assignment) => (
-                            <div
-                              key={assignment.id}
-                              className="flex items-start space-x-3 p-4 border rounded-md hover:bg-muted/50 transition-colors"
-                            >
-                              <Checkbox
-                                id={`task-assigned-${assignment.id}`}
-                                checked={true}
-                                onCheckedChange={() => {
-                                  // toggleTaskAssignment(assignment.id)
-                                }}
-                              />
-                              <div className="flex-1">
-                                <label
-                                  htmlFor={`task-assigned-${assignment.id}`}
-                                  className="text-sm font-medium cursor-pointer flex items-center"
-                                >
-                                  {assignment.title}
-                                  <Badge
-                                    variant="outline"
-                                    className="ml-2 text-xs"
+                      {isLoadingTeamAssignments ? (
+                        <div className="flex items-center justify-center h-32">
+                          <p className="text-muted-foreground">読み込み中...</p>
+                        </div>
+                      ) : (
+                        <div className="space-y-4">
+                          {assignments
+                            .filter((assignment) =>
+                              teamAssignments.includes(assignment.id),
+                            )
+                            .map((assignment) => (
+                              <div
+                                key={assignment.id}
+                                className="flex items-start space-x-3 p-4 border rounded-md hover:bg-muted/50 transition-colors"
+                              >
+                                <Checkbox
+                                  id={`task-assigned-${assignment.id}`}
+                                  checked={true}
+                                  onCheckedChange={() => {
+                                    toggleTaskAssignment(assignment.id);
+                                  }}
+                                />
+                                <div className="flex-1">
+                                  <label
+                                    htmlFor={`task-assigned-${assignment.id}`}
+                                    className="text-sm font-medium cursor-pointer flex items-center"
                                   >
-                                    {assignment.genre}
-                                  </Badge>
-                                </label>
-                                <p className="text-sm text-muted-foreground mt-1">
-                                  {assignment.description}
-                                </p>
+                                    {assignment.title}
+                                    <Badge
+                                      variant="outline"
+                                      className="ml-2 text-xs"
+                                    >
+                                      {assignment.genre}
+                                    </Badge>
+                                  </label>
+                                  <p className="text-sm text-muted-foreground mt-1">
+                                    {assignment.description}
+                                  </p>
+                                </div>
                               </div>
-                            </div>
-                          ))}
-                      </div>
+                            ))}
+                        </div>
+                      )}
                     </TabsContent>
                     <TabsContent value="unassigned" className="mt-4">
-                      <div className="space-y-4">
-                        {assignments
-                          // .filter((assignment) => !teamAssignments.includes(assignment.id))
-                          .map((assignment) => (
-                            <div
-                              key={assignment.id}
-                              className="flex items-start space-x-3 p-4 border rounded-md hover:bg-muted/50 transition-colors"
-                            >
-                              <Checkbox
-                                id={`task-unassigned-${assignment.id}`}
-                                checked={false}
-                                onCheckedChange={() => {
-                                  // toggleTaskAssignment(assignment.id)
-                                }}
-                              />
-                              <div className="flex-1">
-                                <label
-                                  htmlFor={`task-unassigned-${assignment.id}`}
-                                  className="text-sm font-medium cursor-pointer flex items-center"
-                                >
-                                  {assignment.title}
-                                  <Badge
-                                    variant="outline"
-                                    className="ml-2 text-xs"
+                      {isLoadingTeamAssignments ? (
+                        <div className="flex items-center justify-center h-32">
+                          <p className="text-muted-foreground">読み込み中...</p>
+                        </div>
+                      ) : (
+                        <div className="space-y-4">
+                          {assignments
+                            .filter(
+                              (assignment) =>
+                                !teamAssignments.includes(assignment.id),
+                            )
+                            .map((assignment) => (
+                              <div
+                                key={assignment.id}
+                                className="flex items-start space-x-3 p-4 border rounded-md hover:bg-muted/50 transition-colors"
+                              >
+                                <Checkbox
+                                  id={`task-unassigned-${assignment.id}`}
+                                  checked={false}
+                                  onCheckedChange={() => {
+                                    toggleTaskAssignment(assignment.id);
+                                  }}
+                                />
+                                <div className="flex-1">
+                                  <label
+                                    htmlFor={`task-unassigned-${assignment.id}`}
+                                    className="text-sm font-medium cursor-pointer flex items-center"
                                   >
-                                    {assignment.genre}
-                                  </Badge>
-                                </label>
-                                <p className="text-sm text-muted-foreground mt-1">
-                                  {assignment.description}
-                                </p>
+                                    {assignment.title}
+                                    <Badge
+                                      variant="outline"
+                                      className="ml-2 text-xs"
+                                    >
+                                      {assignment.genre}
+                                    </Badge>
+                                  </label>
+                                  <p className="text-sm text-muted-foreground mt-1">
+                                    {assignment.description}
+                                  </p>
+                                </div>
                               </div>
-                            </div>
-                          ))}
-                      </div>
+                            ))}
+                        </div>
+                      )}
                     </TabsContent>
                   </Tabs>
-
                   <div className="flex justify-end mt-6">
                     <Button onClick={saveChanges} disabled={!selectedTeam}>
                       変更を保存
