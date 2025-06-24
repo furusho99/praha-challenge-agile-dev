@@ -26,12 +26,7 @@ import {
 } from "@/components/atoms/tabs";
 import { Alert, AlertDescription } from "@/components/atoms/alert";
 import { CheckCircle, AlertCircle } from "lucide-react";
-
-// モックデータ
-const seasons = [
-  { id: "1", name: "1期" },
-  { id: "2", name: "2期" },
-];
+import { SeasonSelect } from "@/components/organisms/seasons/season-select";
 
 const teams = [
   { id: "1-1", name: "チーム1-1", seasonId: "1" },
@@ -549,24 +544,12 @@ export default function TeamAssignmentPage() {
                 <label htmlFor="season" className="text-sm font-medium">
                   シーズン
                 </label>
-                <Select
+                <SeasonSelect
                   value={selectedSeason}
-                  onValueChange={(value) => {
-                    setSelectedSeason(value);
-                    setSelectedTeam("");
-                  }}
-                >
-                  <SelectTrigger id="season">
-                    <SelectValue placeholder="シーズンを選択" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {seasons.map((season) => (
-                      <SelectItem key={season.id} value={season.id}>
-                        {season.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                  onValueChange={setSelectedSeason}
+                  placeholder="シーズンを選択"
+                  disabled={false}
+                />
               </div>
 
               <div className="space-y-2">
