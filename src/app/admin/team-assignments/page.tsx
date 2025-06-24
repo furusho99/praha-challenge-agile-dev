@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -21,430 +21,8 @@ import { Alert, AlertDescription } from "@/components/atoms/alert";
 import { CheckCircle, AlertCircle } from "lucide-react";
 import { SeasonSelect } from "@/components/organisms/seasons/season-select";
 import { TeamSelect } from "@/components/organisms/teams/team-select";
-
-const tasks = [
-  {
-    id: "1",
-    title: "DBモデリング1",
-    description: "...",
-    genre: "データベース設計",
-  },
-  {
-    id: "2",
-    title: "DBモデリング2",
-    description: "...",
-    genre: "データベース設計",
-  },
-  {
-    id: "3",
-    title: "DBモデリング3",
-    description: "...",
-    genre: "データベース設計",
-  },
-  {
-    id: "4",
-    title: "DBモデリング4",
-    description: "...",
-    genre: "データベース設計",
-  },
-  {
-    id: "5",
-    title: "DBモデリング5",
-    description: "...",
-    genre: "データベース設計",
-  },
-  {
-    id: "6",
-    title: "データベース設計のアンチパターンを学ぶ1",
-    description: "...",
-    genre: "データベース設計",
-  },
-  {
-    id: "7",
-    title: "データベース設計のアンチパターンを学ぶ2",
-    description: "...",
-    genre: "データベース設計",
-  },
-  {
-    id: "8",
-    title: "データベース設計のアンチパターンを学ぶ3",
-    description: "...",
-    genre: "データベース設計",
-  },
-  {
-    id: "9",
-    title: "データベース設計のアンチパターンを学ぶ4",
-    description: "...",
-    genre: "データベース設計",
-  },
-  {
-    id: "10",
-    title: "データベース設計のアンチパターンを学ぶ5",
-    description: "...",
-    genre: "データベース設計",
-  },
-  {
-    id: "11",
-    title: "データベース設計のアンチパターンを学ぶ6",
-    description: "...",
-    genre: "データベース設計",
-  },
-  {
-    id: "12",
-    title: "データベース設計のアンチパターンを学ぶ7",
-    description: "...",
-    genre: "データベース設計",
-  },
-  {
-    id: "13",
-    title: "データベース設計のアンチパターンを学ぶ8",
-    description: "...",
-    genre: "データベース設計",
-  },
-  {
-    id: "14",
-    title: "データベース設計のアンチパターンを学ぶ9",
-    description: "...",
-    genre: "データベース設計",
-  },
-  {
-    id: "15",
-    title: "アンチパターンを踏まえてDBモデリングを見直そう",
-    description: "...",
-    genre: "データベース設計",
-  },
-  {
-    id: "16",
-    title: "マルチテナントについて",
-    description: "...",
-    genre: "データベース設計",
-  },
-  {
-    id: "17",
-    title: "外部キー制約について考える",
-    description: "...",
-    genre: "データベース設計",
-  },
-  {
-    id: "18",
-    title: "データベースにおけるNULLの扱い",
-    description: "...",
-    genre: "データベース設計",
-  },
-
-  {
-    id: "19",
-    title: "jestで単体テストを書こう",
-    description: "...",
-    genre: "テスト",
-  },
-  { id: "20", title: "storybookを作ろう", description: "...", genre: "テスト" },
-  {
-    id: "21",
-    title: "スナップショットテストを書こう",
-    description: "...",
-    genre: "テスト",
-  },
-  {
-    id: "22",
-    title: "ビジュアル・リグレッションテストを書こう",
-    description: "...",
-    genre: "テスト",
-  },
-  { id: "23", title: "E2Eテストを書こう", description: "...", genre: "テスト" },
-  {
-    id: "24",
-    title: "TDD（テスト駆動開発）でコードを書いてみる",
-    description: "...",
-    genre: "テスト",
-  },
-  { id: "25", title: "基本的な設計原則", description: "...", genre: "設計" },
-  {
-    id: "26",
-    title: "オニオンアーキテクチャを学ぶ",
-    description: "...",
-    genre: "設計",
-  },
-  { id: "27", title: "DDDを学ぶ（基礎） ", description: "...", genre: "設計" },
-  {
-    id: "28",
-    title: "特大課題：プラハチャレンジ",
-    description: "...",
-    genre: "設計",
-  },
-  { id: "29", title: "DDDを学ぶ（応用）", description: "...", genre: "設計" },
-  { id: "30", title: "リファクタリング", description: "...", genre: "設計" },
-  {
-    id: "31",
-    title: "SQL10本ノック",
-    description: "...",
-    genre: "データベース",
-  },
-  {
-    id: "32",
-    title: "インデックスを理解する",
-    description: "...",
-    genre: "データベース",
-  },
-  {
-    id: "33",
-    title: "スロークエリを理解する",
-    description: "...",
-    genre: "データベース",
-  },
-  {
-    id: "34",
-    title: "ビューを使いこなす",
-    description: "...",
-    genre: "データベース",
-  },
-  {
-    id: "35",
-    title: "トランザクションについて理解する",
-    description: "...",
-    genre: "データベース",
-  },
-
-  {
-    id: "36",
-    title: "はじめに React ( Next.js ) の環境を立ち上げよう",
-    description: "...",
-    genre: "フロントエンド",
-  },
-  {
-    id: "37",
-    title: "適切にコンポーネントを分割して1ページ作ってみよう",
-    description: "...",
-    genre: "フロントエンド",
-  },
-  {
-    id: "38",
-    title: "作ったページをレスポンシブ対応しよう",
-    description: "...",
-    genre: "フロントエンド",
-  },
-  {
-    id: "39",
-    title: "よくあるボタンコンポーネントを作成する",
-    description: "...",
-    genre: "フロントエンド",
-  },
-  {
-    id: "40",
-    title: "再利用しやすいコンポーネントのcssを考える",
-    description: "...",
-    genre: "フロントエンド",
-  },
-  {
-    id: "41",
-    title: "State hooks を理解して ToDo アプリを実装しよう",
-    description: "...",
-    genre: "フロントエンド",
-  },
-  {
-    id: "42",
-    title: "Effect hookを理解する",
-    description: "...",
-    genre: "フロントエンド",
-  },
-  {
-    id: "43",
-    title: "Refを理解する",
-    description: "...",
-    genre: "フロントエンド",
-  },
-  {
-    id: "44",
-    title: "フロントエンドのレンダリングパターンを学ぶ",
-    description: "...",
-    genre: "フロントエンド",
-  },
-  {
-    id: "45",
-    title: "外部ライブラリの存在を隠蔽する",
-    description: "...",
-    genre: "フロントエンド",
-  },
-  {
-    id: "46",
-    title: "SWR/React Queryを理解する",
-    description: "...",
-    genre: "フロントエンド",
-  },
-  {
-    id: "47",
-    title: "Suspense（旧Concurrent mode）を理解する",
-    description: "...",
-    genre: "フロントエンド",
-  },
-
-  {
-    id: "48",
-    title: "よく使うHTTPヘッダを理解する",
-    description: "...",
-    genre: "WEBの基礎",
-  },
-  {
-    id: "49",
-    title: "curlとpostmanに慣れる",
-    description: "...",
-    genre: "WEBの基礎",
-  },
-  {
-    id: "50",
-    title: "リクエストをパースするWEBサーバを作ってみる",
-    description: "...",
-    genre: "WEBの基礎",
-  },
-  {
-    id: "51",
-    title: "クッキーを理解する",
-    description: "...",
-    genre: "WEBの基礎",
-  },
-  {
-    id: "52",
-    title: "サードパーティクッキーについて理解する",
-    description: "...",
-    genre: "WEBの基礎",
-  },
-  {
-    id: "53",
-    title: "CORSについて理解する",
-    description: "...",
-    genre: "WEBの基礎",
-  },
-  {
-    id: "54",
-    title: "キャッシュについて理解する",
-    description: "...",
-    genre: "WEBの基礎",
-  },
-  {
-    id: "55",
-    title: "WEBサービスの代表的な脆弱性を理解する",
-    description: "...",
-    genre: "WEBの基礎",
-  },
-
-  {
-    id: "56",
-    title: "linterを使おう",
-    description: "...",
-    genre: "チーム開発",
-  },
-  {
-    id: "57",
-    title: "CI環境を整備してみよう",
-    description: "...",
-    genre: "チーム開発",
-  },
-  {
-    id: "58",
-    title: "チーム開発を円滑にするコツを覚えよう",
-    description: "...",
-    genre: "チーム開発",
-  },
-  {
-    id: "59",
-    title: "ブランチ戦略を学ぼう",
-    description: "...",
-    genre: "チーム開発",
-  },
-  {
-    id: "60",
-    title: "アジャイル開発を学ぼう",
-    description: "...",
-    genre: "チーム開発",
-  },
-  {
-    id: "61",
-    title: "Gitの便利コマンドを覚える",
-    description: "...",
-    genre: "チーム開発",
-  },
-
-  {
-    id: "62",
-    title: "安全なIAMの設計を理解する",
-    description: "...",
-    genre: "クラウドインフラ",
-  },
-  {
-    id: "63",
-    title: "マルチAZに跨るVPCを構築する",
-    description: "...",
-    genre: "クラウドインフラ",
-  },
-  {
-    id: "64",
-    title: "冗長化されたWebアプリケーションを作ってみよう",
-    description: "...",
-    genre: "クラウドインフラ",
-  },
-  {
-    id: "65",
-    title: "S3を理解する",
-    description: "...",
-    genre: "クラウドインフラ",
-  },
-  {
-    id: "66",
-    title: "CDN(CloudFront)について理解して使ってみよう",
-    description: "...",
-    genre: "クラウドインフラ",
-  },
-
-  {
-    id: "67",
-    title: "ログの取り方を学ぼう",
-    description: "...",
-    genre: "サービス運用",
-  },
-  {
-    id: "68",
-    title: "本番稼働中のデータベースをマイグレーションしよう",
-    description: "...",
-    genre: "サービス運用",
-  },
-  {
-    id: "69",
-    title: "サービスのモニタリングを考える",
-    description: "...",
-    genre: "サービス運用",
-  },
-  {
-    id: "70",
-    title: "Dockerで環境差分を吸収する",
-    description: "...",
-    genre: "サービス運用",
-  },
-
-  {
-    id: "71",
-    title: "外部APIを活用してみよう",
-    description: "...",
-    genre: "高速MVP開発",
-  },
-  {
-    id: "72",
-    title: "MVP用フロントエンドを実装してみよう",
-    description: "...",
-    genre: "高速MVP開発",
-  },
-  {
-    id: "73",
-    title: "ログイン機能を実装してみよう",
-    description: "...",
-    genre: "高速MVP開発",
-  },
-  {
-    id: "74",
-    title: "BaaSを利用してバックエンドを実装・デプロイしてみよう",
-    description: "...",
-    genre: "高速MVP開発",
-  },
-];
+import { getAssignments } from "@/actions/assignments";
+import { toast } from "sonner";
 
 // チームごとの課題割り当て状況（モック）
 const initialAssignments: { [key: string]: string[] } = {
@@ -457,35 +35,45 @@ const initialAssignments: { [key: string]: string[] } = {
 export default function TeamAssignmentPage() {
   const [selectedSeason, setSelectedSeason] = useState<string>("");
   const [selectedTeam, setSelectedTeam] = useState<string>("");
-  const [assignments, setAssignments] = useState(initialAssignments);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [assignments, setAssignments] = useState<
+    {
+      id: string;
+      title: string;
+      genre: string;
+      description: string;
+    }[]
+  >([]);
+
+  const [isLoadingAssignments, setIsLoadingAssignments] =
+    useState<boolean>(true);
 
   // チームが選択されたときの課題割り当て状況
-  const teamAssignments = selectedTeam ? assignments[selectedTeam] || [] : [];
+  // const teamAssignments = selectedTeam ? assignments[selectedTeam] || [] : [];
 
-  // 課題の割り当て状態を切り替える
-  const toggleTaskAssignment = (taskId: string) => {
-    setAssignments((prev) => {
-      const newAssignments = { ...prev };
+  // // 課題の割り当て状態を切り替える
+  // const toggleTaskAssignment = (taskId: string) => {
+  //   setAssignments((prev) => {
+  //     const newAssignments = { ...prev };
 
-      if (!newAssignments[selectedTeam]) {
-        newAssignments[selectedTeam] = [];
-      }
+  //     if (!newAssignments[selectedTeam]) {
+  //       newAssignments[selectedTeam] = [];
+  //     }
 
-      if (newAssignments[selectedTeam].includes(taskId)) {
-        newAssignments[selectedTeam] = newAssignments[selectedTeam].filter(
-          (id) => id !== taskId,
-        );
-      } else {
-        newAssignments[selectedTeam] = [
-          ...newAssignments[selectedTeam],
-          taskId,
-        ];
-      }
+  //     if (newAssignments[selectedTeam].includes(taskId)) {
+  //       newAssignments[selectedTeam] = newAssignments[selectedTeam].filter(
+  //         (id) => id !== taskId,
+  //       );
+  //     } else {
+  //       newAssignments[selectedTeam] = [
+  //         ...newAssignments[selectedTeam],
+  //         taskId,
+  //       ];
+  //     }
 
-      return newAssignments;
-    });
-  };
+  //     return newAssignments;
+  //   });
+  // };
 
   // 変更を保存する
   const saveChanges = () => {
@@ -498,6 +86,25 @@ export default function TeamAssignmentPage() {
       setSuccessMessage(null);
     }, 3000);
   };
+
+  useEffect(() => {
+    async function fetchTeams() {
+      try {
+        const result = await getAssignments();
+        if (result.success) {
+          setAssignments(result.data);
+        } else {
+          toast.error(result.message);
+        }
+      } catch (error) {
+        console.error("チーム取得エラー:", error);
+        toast.error("チームの取得に失敗しました");
+      } finally {
+        setIsLoadingAssignments(false);
+      }
+    }
+    fetchTeams();
+  }, []);
 
   return (
     <div className="container mx-auto py-8">
@@ -583,33 +190,34 @@ export default function TeamAssignmentPage() {
                     </TabsList>
                     <TabsContent value="all" className="mt-4">
                       <div className="space-y-4">
-                        {tasks.map((task) => (
+                        {assignments.map((assignment) => (
                           <div
-                            key={task.id}
+                            key={assignment.id}
                             className="flex items-start space-x-3 p-4 border rounded-md hover:bg-muted/50 transition-colors"
                           >
                             <Checkbox
-                              id={`task-${task.id}`}
-                              checked={teamAssignments.includes(task.id)}
-                              onCheckedChange={() =>
-                                toggleTaskAssignment(task.id)
+                              id={`task-${assignment.id}`}
+                              // checked={teamAssignments.includes(assignment.id)}
+                              onCheckedChange={
+                                () => {}
+                                // toggleTaskAssignment(assignment.id)
                               }
                             />
                             <div className="flex-1">
                               <label
-                                htmlFor={`task-${task.id}`}
+                                htmlFor={`task-${assignment.id}`}
                                 className="text-sm font-medium cursor-pointer flex items-center"
                               >
-                                {task.title}
+                                {assignment.title}
                                 <Badge
                                   variant="outline"
                                   className="ml-2 text-xs"
                                 >
-                                  {task.genre}
+                                  {assignment.genre}
                                 </Badge>
                               </label>
                               <p className="text-sm text-muted-foreground mt-1">
-                                {task.description}
+                                {assignment.description}
                               </p>
                             </div>
                           </div>
@@ -618,35 +226,35 @@ export default function TeamAssignmentPage() {
                     </TabsContent>
                     <TabsContent value="assigned" className="mt-4">
                       <div className="space-y-4">
-                        {tasks
-                          .filter((task) => teamAssignments.includes(task.id))
-                          .map((task) => (
+                        {assignments
+                          // .filter((assignment) => teamAssignments.includes(assignment.id))
+                          .map((assignment) => (
                             <div
-                              key={task.id}
+                              key={assignment.id}
                               className="flex items-start space-x-3 p-4 border rounded-md hover:bg-muted/50 transition-colors"
                             >
                               <Checkbox
-                                id={`task-assigned-${task.id}`}
+                                id={`task-assigned-${assignment.id}`}
                                 checked={true}
-                                onCheckedChange={() =>
-                                  toggleTaskAssignment(task.id)
-                                }
+                                onCheckedChange={() => {
+                                  // toggleTaskAssignment(assignment.id)
+                                }}
                               />
                               <div className="flex-1">
                                 <label
-                                  htmlFor={`task-assigned-${task.id}`}
+                                  htmlFor={`task-assigned-${assignment.id}`}
                                   className="text-sm font-medium cursor-pointer flex items-center"
                                 >
-                                  {task.title}
+                                  {assignment.title}
                                   <Badge
                                     variant="outline"
                                     className="ml-2 text-xs"
                                   >
-                                    {task.genre}
+                                    {assignment.genre}
                                   </Badge>
                                 </label>
                                 <p className="text-sm text-muted-foreground mt-1">
-                                  {task.description}
+                                  {assignment.description}
                                 </p>
                               </div>
                             </div>
@@ -655,35 +263,35 @@ export default function TeamAssignmentPage() {
                     </TabsContent>
                     <TabsContent value="unassigned" className="mt-4">
                       <div className="space-y-4">
-                        {tasks
-                          .filter((task) => !teamAssignments.includes(task.id))
-                          .map((task) => (
+                        {assignments
+                          // .filter((assignment) => !teamAssignments.includes(assignment.id))
+                          .map((assignment) => (
                             <div
-                              key={task.id}
+                              key={assignment.id}
                               className="flex items-start space-x-3 p-4 border rounded-md hover:bg-muted/50 transition-colors"
                             >
                               <Checkbox
-                                id={`task-unassigned-${task.id}`}
+                                id={`task-unassigned-${assignment.id}`}
                                 checked={false}
-                                onCheckedChange={() =>
-                                  toggleTaskAssignment(task.id)
-                                }
+                                onCheckedChange={() => {
+                                  // toggleTaskAssignment(assignment.id)
+                                }}
                               />
                               <div className="flex-1">
                                 <label
-                                  htmlFor={`task-unassigned-${task.id}`}
+                                  htmlFor={`task-unassigned-${assignment.id}`}
                                   className="text-sm font-medium cursor-pointer flex items-center"
                                 >
-                                  {task.title}
+                                  {assignment.title}
                                   <Badge
                                     variant="outline"
                                     className="ml-2 text-xs"
                                   >
-                                    {task.genre}
+                                    {assignment.genre}
                                   </Badge>
                                 </label>
                                 <p className="text-sm text-muted-foreground mt-1">
-                                  {task.description}
+                                  {assignment.description}
                                 </p>
                               </div>
                             </div>

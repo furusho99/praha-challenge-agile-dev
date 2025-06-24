@@ -8,6 +8,34 @@ import {
 import { createAssignmentUsecase } from "@/usecases/assignments/createAssignmentUsecase";
 import { getAssignmentRepository } from "@/infra/assignments/assignmentRepositoryImpl";
 import { revalidatePath } from "next/cache";
+import { getAssignmentsUsecase } from "@/usecases/assignments/getAssignmentsUsecase";
+
+/**
+ * 課題一覧を取得するサーバーアクション
+ */
+export async function getAssignments() {
+  try {
+    const repository = getAssignmentRepository();
+    const assignments = await getAssignmentsUsecase(repository);
+
+    return {
+      success: true,
+      data: assignments.map((assignment) => ({
+        id: assignment.id,
+        title: assignment.title,
+        genre: assignment.genre,
+        description: assignment.description,
+      })),
+    };
+  } catch (error) {
+    console.error("課題取得エラー:", error);
+    return {
+      success: false,
+      message: "課題の取得に失敗しました",
+      data: [],
+    };
+  }
+}
 
 /**
  * 課題を作成するサーバーアクション

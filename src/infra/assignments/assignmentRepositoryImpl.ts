@@ -10,6 +10,23 @@ import { assignmentsTable } from "@/infra/schema";
  * 課題リポジトリの実装クラス
  */
 export class AssignmentRepositoryImpl implements AssignmentRepository {
+  /**
+   * 課題の一覧を取得するメソッド
+   */
+  async findAll(): Promise<Assignment[]> {
+    const assignments = await db.select().from(assignmentsTable);
+
+    return assignments.map((assignment) =>
+      Assignment.reconstruct({
+        id: assignment.id,
+        title: assignment.title,
+        genre: assignment.genre,
+        description: assignment.description,
+        version: assignment.version,
+      }),
+    );
+  }
+
   async save(data: Assignment): Promise<Assignment> {
     const insertedAssignment = await db
       .insert(assignmentsTable)
