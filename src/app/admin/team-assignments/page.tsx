@@ -8,7 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/atoms/card";
-import { Checkbox } from "@/components/atoms/checkbox";
+import { Switch } from "@/components/atoms/switch";
 import { Badge } from "@/components/atoms/badge";
 import {
   Tabs,
@@ -145,39 +145,39 @@ export default function TeamAssignmentPage() {
         <div className="md:col-span-3">
           <div className="sticky top-8">
             <Card>
-            <CardHeader>
-              <CardTitle>フィルター</CardTitle>
-              <CardDescription>
-                シーズンとチームを選択してください
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <label htmlFor="season" className="text-sm font-medium">
-                  シーズン
-                </label>
-                <SeasonSelect
-                  value={selectedSeason}
-                  onValueChange={setSelectedSeason}
-                  placeholder="シーズンを選択"
-                  disabled={false}
-                />
-              </div>
+              <CardHeader>
+                <CardTitle>フィルター</CardTitle>
+                <CardDescription>
+                  シーズンとチームを選択してください
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <label htmlFor="season" className="text-sm font-medium">
+                    シーズン
+                  </label>
+                  <SeasonSelect
+                    value={selectedSeason}
+                    onValueChange={setSelectedSeason}
+                    placeholder="シーズンを選択"
+                    disabled={false}
+                  />
+                </div>
 
-              <div className="space-y-2">
-                <label htmlFor="team" className="text-sm font-medium">
-                  チーム
-                </label>
-                <TeamSelect
-                  value={selectedTeam}
-                  onValueChange={setSelectedTeam}
-                  seasonId={selectedSeason}
-                  placeholder="チームを選択"
-                  disabled={!selectedSeason}
-                />
-              </div>
-            </CardContent>
-          </Card>
+                <div className="space-y-2">
+                  <label htmlFor="team" className="text-sm font-medium">
+                    チーム
+                  </label>
+                  <TeamSelect
+                    value={selectedTeam}
+                    onValueChange={setSelectedTeam}
+                    seasonId={selectedSeason}
+                    placeholder="チームを選択"
+                    disabled={!selectedSeason}
+                  />
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
 
@@ -215,9 +215,9 @@ export default function TeamAssignmentPage() {
                           {assignments.map((assignment) => (
                             <div
                               key={assignment.id}
-                              className="flex items-start space-x-3 p-4 border rounded-md hover:bg-muted/50 transition-colors"
+                              className="flex items-center space-x-3 p-4 border rounded-md hover:bg-muted/50 transition-colors"
                             >
-                              <Checkbox
+                              <Switch
                                 id={assignment.id}
                                 checked={isPublic(assignment.id)}
                                 onCheckedChange={() =>
@@ -258,9 +258,9 @@ export default function TeamAssignmentPage() {
                             .map((assignment) => (
                               <div
                                 key={assignment.id}
-                                className="flex items-start space-x-3 p-4 border rounded-md hover:bg-muted/50 transition-colors"
+                                className="flex items-center space-x-3 p-4 border rounded-md hover:bg-muted/50 transition-colors"
                               >
-                                <Checkbox
+                                <Switch
                                   id={assignment.id}
                                   defaultChecked={isPublic(assignment.id)}
                                   onCheckedChange={() => {
@@ -301,9 +301,9 @@ export default function TeamAssignmentPage() {
                             .map((assignment) => (
                               <div
                                 key={assignment.id}
-                                className="flex items-start space-x-3 p-4 border rounded-md hover:bg-muted/50 transition-colors"
+                                className="flex items-center space-x-3 p-4 border rounded-md hover:bg-muted/50 transition-colors"
                               >
-                                <Checkbox
+                                <Switch
                                   id={`task-unassigned-${assignment.id}`}
                                   checked={isPublic(assignment.id)}
                                   onCheckedChange={() => {
