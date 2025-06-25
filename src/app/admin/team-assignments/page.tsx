@@ -143,7 +143,8 @@ export default function TeamAssignmentPage() {
       <h1 className="text-3xl font-bold mb-6">チームの課題公開状態</h1>
       <div className="grid gap-6 md:grid-cols-12">
         <div className="md:col-span-3">
-          <Card>
+          <div className="sticky top-8">
+            <Card>
             <CardHeader>
               <CardTitle>フィルター</CardTitle>
               <CardDescription>
@@ -177,6 +178,7 @@ export default function TeamAssignmentPage() {
               </div>
             </CardContent>
           </Card>
+          </div>
         </div>
 
         <div className="md:col-span-9">
