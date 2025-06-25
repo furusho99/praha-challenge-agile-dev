@@ -611,12 +611,30 @@ export const AssignmentTable = () => {
                     );
                   }}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger
+                    className={
+                      assignment.status === AssignmentReviewStatus.PENDING
+                        ? 'text-orange-700 font-medium bg-orange-50 border border-orange-200'
+                        : assignment.status === AssignmentReviewStatus.REVIEWED
+                          ? 'text-green-700 font-medium bg-green-50 border border-green-200'
+                          : ''
+                    }
+                  >
                     <SelectValue placeholder="ステータスを選択" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="PENDING">レビュー待ち</SelectItem>
-                    <SelectItem value="REVIEWED">レビュー済み</SelectItem>
+                    <SelectItem
+                      value="PENDING"
+                      className="text-orange-700 font-medium bg-orange-50 border border-orange-200"
+                    >
+                      レビュー待ち
+                    </SelectItem>
+                    <SelectItem
+                      value="REVIEWED"
+                      className="text-green-700 font-medium bg-green-50 border border-green-200"
+                    >
+                      レビュー済み
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </TableCell>
