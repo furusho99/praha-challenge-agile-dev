@@ -8,7 +8,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/atoms/card";
-import { Button } from "@/components/atoms/button";
 import { Checkbox } from "@/components/atoms/checkbox";
 import { Badge } from "@/components/atoms/badge";
 import {
@@ -17,18 +16,19 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/atoms/tabs";
-import { Alert, AlertDescription } from "@/components/atoms/alert";
-import { CheckCircle, AlertCircle } from "lucide-react";
+import { AlertCircle } from "lucide-react";
 import { SeasonSelect } from "@/components/organisms/seasons/season-select";
 import { TeamSelect } from "@/components/organisms/teams/team-select";
 import { getAssignments } from "@/actions/assignments";
-import { getTeamsAssignments } from "@/actions/teams-assignments";
+import {
+  createTeamsAssignment,
+  getTeamsAssignments,
+} from "@/actions/teams-assignments";
 import { toast } from "sonner";
 
 export default function TeamAssignmentPage() {
   const [selectedSeason, setSelectedSeason] = useState<string>("");
   const [selectedTeam, setSelectedTeam] = useState<string>("");
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [assignments, setAssignments] = useState<
     {
       id: string;
@@ -37,31 +37,60 @@ export default function TeamAssignmentPage() {
       description: string;
     }[]
   >([]);
-  const [teamAssignments, setTeamAssignments] = useState<string[]>([]);
+  const [teamAssignments, setTeamAssignments] = useState<
+    { assignmentsId: string; isPublic: boolean }[]
+  >([]);
   const [isLoadingTeamAssignments, setIsLoadingTeamAssignments] =
     useState<boolean>(false);
 
-  // 課題の割り当て状態を切り替える
-  const toggleTaskAssignment = (taskId: string) => {
-    setTeamAssignments((prev) => {
-      if (prev.includes(taskId)) {
-        return prev.filter((id) => id !== taskId);
-      } else {
-        return [...prev, taskId];
+  // 課題の公開状態を切り替える
+  const toggleTaskAssignment = async (assignmentsId: string) => {
+    if (!selectedTeam) {
+      toast.error("チームを選択してください");
+      return;
+    }
+
+    try {
+      if (!assignments.some((a) => a.id === assignmentsId)) {
+        toast.error(`課題 ${assignmentsId} は存在しません`);
+        return;
       }
-    });
+
+      const currentIsPublic = isPublic(assignmentsId);
+
+      await createTeamsAssignment({
+        teamsId: selectedTeam,
+        assignmentsId,
+        isPublic: !currentIsPublic,
+      });
+
+      // チーム課題の状態を最新に更新
+      const result = await getTeamsAssignments(selectedTeam);
+      if (result.success) {
+        setTeamAssignments(
+          result.data.map((item) => ({
+            assignmentsId: item.assignmentsId,
+            isPublic: item.isPublic,
+          })),
+        );
+      }
+
+      if (!currentIsPublic) {
+        toast.success("課題を公開しました。");
+      } else {
+        toast.success("課題を非公開にしました。");
+      }
+    } catch (error) {
+      console.error("課題の公開状態更新エラー:", error);
+      toast.error("課題の公開状態の更新に失敗しました");
+    }
   };
 
-  // 変更を保存する
-  const saveChanges = () => {
-    // ここで実際のAPIリクエストを行う
-    console.log("保存された割り当て:", teamAssignments);
-    setSuccessMessage("チームへの課題割り当てが保存されました");
-
-    // 3秒後にメッセージを消す
-    setTimeout(() => {
-      setSuccessMessage(null);
-    }, 3000);
+  const isPublic = (assignmentsId: string) => {
+    const teamsAssignment = teamAssignments.find(
+      (assignment) => assignment.assignmentsId === assignmentsId,
+    );
+    return teamsAssignment ? teamsAssignment.isPublic : false;
   };
 
   useEffect(() => {
@@ -81,28 +110,26 @@ export default function TeamAssignmentPage() {
     fetchAssignments();
   }, []);
 
-  // チームが選択されたときに、そのチームの課題割り当て状況を取得する
   useEffect(() => {
     async function fetchTeamAssignments() {
-      if (!selectedTeam) {
-        setTeamAssignments([]);
-        return;
-      }
+      if (!selectedTeam) return;
 
       setIsLoadingTeamAssignments(true);
       try {
         const result = await getTeamsAssignments(selectedTeam);
         if (result.success) {
-          // チームに割り当てられている課題のIDを取得
-          const assignedTaskIds = result.data.map((item) => item.assignmentsId);
-          setTeamAssignments(assignedTaskIds);
+          setTeamAssignments(
+            result.data.map((item) => ({
+              assignmentsId: item.assignmentsId,
+              isPublic: item.isPublic,
+            })),
+          );
         } else {
           toast.error(result.message);
           setTeamAssignments([]);
         }
       } catch (error) {
-        console.error("チーム課題割り当て取得エラー:", error);
-        toast.error("チーム課題割り当ての取得に失敗しました");
+        console.error("チーム課題取得エラー:", error);
         setTeamAssignments([]);
       } finally {
         setIsLoadingTeamAssignments(false);
@@ -113,17 +140,7 @@ export default function TeamAssignmentPage() {
 
   return (
     <div className="container mx-auto py-8">
-      <h1 className="text-3xl font-bold mb-6">チーム課題割り当て</h1>
-
-      {successMessage && (
-        <Alert className="mb-6 bg-green-50 border-green-200">
-          <CheckCircle className="h-4 w-4 text-green-600" />
-          <AlertDescription className="text-green-600">
-            {successMessage}
-          </AlertDescription>
-        </Alert>
-      )}
-
+      <h1 className="text-3xl font-bold mb-6">チームの課題公開状態</h1>
       <div className="grid gap-6 md:grid-cols-12">
         <div className="md:col-span-3">
           <Card>
@@ -165,9 +182,9 @@ export default function TeamAssignmentPage() {
         <div className="md:col-span-9">
           <Card>
             <CardHeader>
-              <CardTitle>課題割り当て</CardTitle>
+              <CardTitle>課題の公開状態</CardTitle>
               <CardDescription>
-                チームに割り当てる課題を選択してください
+                チームに公開する課題を選択してください
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -183,8 +200,8 @@ export default function TeamAssignmentPage() {
                   <Tabs defaultValue="all" className="mb-6">
                     <TabsList>
                       <TabsTrigger value="all">すべての課題</TabsTrigger>
-                      <TabsTrigger value="assigned">割り当て済み</TabsTrigger>
-                      <TabsTrigger value="unassigned">未割り当て</TabsTrigger>
+                      <TabsTrigger value="assigned">公開済み</TabsTrigger>
+                      <TabsTrigger value="unassigned">未公開</TabsTrigger>
                     </TabsList>
                     <TabsContent value="all" className="mt-4">
                       {isLoadingTeamAssignments ? (
@@ -199,17 +216,15 @@ export default function TeamAssignmentPage() {
                               className="flex items-start space-x-3 p-4 border rounded-md hover:bg-muted/50 transition-colors"
                             >
                               <Checkbox
-                                id={`task-${assignment.id}`}
-                                checked={teamAssignments.includes(
-                                  assignment.id,
-                                )}
+                                id={assignment.id}
+                                checked={isPublic(assignment.id)}
                                 onCheckedChange={() =>
                                   toggleTaskAssignment(assignment.id)
                                 }
                               />
                               <div className="flex-1">
                                 <label
-                                  htmlFor={`task-${assignment.id}`}
+                                  htmlFor={assignment.id}
                                   className="text-sm font-medium cursor-pointer flex items-center"
                                 >
                                   {assignment.title}
@@ -237,24 +252,22 @@ export default function TeamAssignmentPage() {
                       ) : (
                         <div className="space-y-4">
                           {assignments
-                            .filter((assignment) =>
-                              teamAssignments.includes(assignment.id),
-                            )
+                            .filter((assignment) => isPublic(assignment.id))
                             .map((assignment) => (
                               <div
                                 key={assignment.id}
                                 className="flex items-start space-x-3 p-4 border rounded-md hover:bg-muted/50 transition-colors"
                               >
                                 <Checkbox
-                                  id={`task-assigned-${assignment.id}`}
-                                  checked={true}
+                                  id={assignment.id}
+                                  defaultChecked={isPublic(assignment.id)}
                                   onCheckedChange={() => {
                                     toggleTaskAssignment(assignment.id);
                                   }}
                                 />
                                 <div className="flex-1">
                                   <label
-                                    htmlFor={`task-assigned-${assignment.id}`}
+                                    htmlFor={assignment.id}
                                     className="text-sm font-medium cursor-pointer flex items-center"
                                   >
                                     {assignment.title}
@@ -282,10 +295,7 @@ export default function TeamAssignmentPage() {
                       ) : (
                         <div className="space-y-4">
                           {assignments
-                            .filter(
-                              (assignment) =>
-                                !teamAssignments.includes(assignment.id),
-                            )
+                            .filter((assignment) => !isPublic(assignment.id))
                             .map((assignment) => (
                               <div
                                 key={assignment.id}
@@ -293,7 +303,7 @@ export default function TeamAssignmentPage() {
                               >
                                 <Checkbox
                                   id={`task-unassigned-${assignment.id}`}
-                                  checked={false}
+                                  checked={isPublic(assignment.id)}
                                   onCheckedChange={() => {
                                     toggleTaskAssignment(assignment.id);
                                   }}
@@ -321,11 +331,6 @@ export default function TeamAssignmentPage() {
                       )}
                     </TabsContent>
                   </Tabs>
-                  <div className="flex justify-end mt-6">
-                    <Button onClick={saveChanges} disabled={!selectedTeam}>
-                      変更を保存
-                    </Button>
-                  </div>
                 </>
               )}
             </CardContent>

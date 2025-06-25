@@ -26,7 +26,6 @@ export class TeamsAssignmentsRepositoryImpl
         TeamsAssignments.reconstruct({
           teamsId: assignment.teamsId,
           assignmentsId: assignment.assignmentsId,
-          status: assignment.status,
           isPublic: assignment.isPublic,
         }),
       );
@@ -34,6 +33,26 @@ export class TeamsAssignmentsRepositoryImpl
       console.error("チーム割り当ての取得に失敗しました:", error);
       throw new Error("チーム割り当ての取得に失敗しました");
     }
+  }
+
+  async save(teamsAssignments: TeamsAssignments): Promise<void> {
+    // すでに存在する場合は更新、存在しない場合は挿入
+    await db
+      .insert(teamsAssignmentsTable)
+      .values({
+        teamsId: teamsAssignments.teamsId,
+        assignmentsId: teamsAssignments.assignmentsId,
+        isPublic: teamsAssignments.isPublic,
+      })
+      .onConflictDoUpdate({
+        target: [
+          teamsAssignmentsTable.teamsId,
+          teamsAssignmentsTable.assignmentsId,
+        ],
+        set: {
+          isPublic: teamsAssignments.isPublic,
+        },
+      });
   }
 }
 

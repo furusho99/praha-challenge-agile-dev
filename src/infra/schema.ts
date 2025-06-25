@@ -104,9 +104,6 @@ export const teamsAssignmentsTable = pgTable(
       .notNull()
       .references(() => teamsTable.id),
     assignmentsId: uuid("assignments_id").notNull(),
-    status: varchar("status", { length: 50 })
-      .references(() => assignmentStatusTable.status)
-      .notNull(),
     isPublic: boolean("is_public").notNull(),
     createdAt: timestamp("created_at").notNull().defaultNow(),
     updatedAt: timestamp("updated_at").notNull().defaultNow(),

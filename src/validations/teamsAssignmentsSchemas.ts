@@ -9,7 +9,6 @@ import * as z from "zod";
 export const teamsAssignmentsSchemas = z.object({
   teamsId: z.string().uuid({ message: "有効なUUID形式ではありません" }),
   assignmentsId: z.string().uuid({ message: "有効なUUID形式ではありません" }),
-  status: z.string().max(50),
   isPublic: z.boolean(),
 });
 
