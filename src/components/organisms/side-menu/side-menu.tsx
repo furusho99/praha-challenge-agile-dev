@@ -28,6 +28,14 @@ export const SideMenu = ({ isLoggedIn }: Props) => {
                   課題一覧
                 </Link>
               </li>
+                <li>
+                    <Link
+                    href="/admin/assignments/create"
+                    className="block px-4 py-2 hover:bg-gray-700 rounded"
+                    >
+                    課題登録
+                    </Link>
+                </li>
               <li>
                 <Link
                   href="/admin/team-assignments"
@@ -45,7 +53,8 @@ export const SideMenu = ({ isLoggedIn }: Props) => {
                         router.refresh();
                       })
                       .catch((error) => {
-                        console.error("ログアウトエラー:", error);
+                        router.push("/error");
+                        console.error("Sign out failed:", error);
                       });
                   }}
                   className="block w-full text-left px-4 py-2 hover:bg-gray-700 rounded cursor-pointer"
