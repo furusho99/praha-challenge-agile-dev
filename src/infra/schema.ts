@@ -96,6 +96,24 @@ export const usersAssignmentsTable = pgTable(
   ],
 );
 
+// チーム課題関連テーブル
+export const teamsAssignmentsTable = pgTable(
+  "teams_assignments",
+  {
+    teamsId: uuid("teams_id")
+      .notNull()
+      .references(() => teamsTable.id),
+    assignmentsId: uuid("assignments_id").notNull(),
+    isPublic: boolean("is_public").notNull(),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+    updatedAt: timestamp("updated_at").notNull().defaultNow(),
+  },
+  (table) => [
+    // 複合主キー
+    primaryKey({ columns: [table.teamsId, table.assignmentsId] }),
+  ],
+);
+
 // 新規課題公開リクエストステータステーブル
 export const newAssignmentStatusTable = pgTable("new_assignment_status", {
   status: varchar("status", { length: 50 }).primaryKey(),
