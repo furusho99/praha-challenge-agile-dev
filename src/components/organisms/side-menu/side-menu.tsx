@@ -10,7 +10,7 @@ type Props = {
 
 export const SideMenu = ({ isLoggedIn }: Props) => {
   const router = useRouter();
-    
+
   return (
     <div className="flex flex-col h-full w-64 bg-gray-800 text-white h-auto">
       <div className="flex items-center justify-center h-16 border-b border-gray-700">
