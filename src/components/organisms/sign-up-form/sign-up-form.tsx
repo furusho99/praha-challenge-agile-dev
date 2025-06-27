@@ -26,7 +26,7 @@ export function SignUpForm() {
       if (result.error) {
         return result;
       } else {
-        router.push("/");
+        router.push("/user/assignments");
         router.refresh();
         return {};
       }

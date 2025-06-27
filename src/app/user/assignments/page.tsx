@@ -1,4 +1,4 @@
-import { AssignmentTable } from '@/components/organisms/assignments/assignment-table';
+import { AssignmentTable } from "@/components/organisms/assignments/assignment-table";
 
 export default function Page() {
   return (
