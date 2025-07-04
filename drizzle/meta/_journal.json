@@ -43,6 +43,13 @@
       "when": 1749720494317,
       "tag": "0005_groovy_boomerang",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1750228718095,
+      "tag": "0006_wandering_the_initiative",
+      "breakpoints": true
     }
   ]
 }

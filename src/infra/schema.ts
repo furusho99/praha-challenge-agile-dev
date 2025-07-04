@@ -138,3 +138,17 @@ export const newAssignmentPublicRequestsTable = pgTable(
     }),
   ],
 );
+
+//ユーザー休会テーブル
+export const usersSuspensionTable = pgTable("users_suspension", {
+  id: uuid("id").primaryKey(),
+  userId: uuid("user_id")
+    .notNull()
+    .references(() => usersTable.id, { onDelete: "cascade" }),
+  fromYear: integer("from_year").notNull(),
+  fromMonth: integer("from_month").notNull(),
+  untilYear: integer("until_year").notNull(),
+  untilMonth: integer("until_month").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
